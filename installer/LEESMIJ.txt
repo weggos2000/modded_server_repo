@@ -14,7 +14,8 @@ Updaten: gewoon opnieuw dubbelklikken op "Installeren.cmd".
 Laptop of trage pc? Kies bij het installeren "Performance", of dubbelklik later op
 "Performance aan.cmd" (meer FPS, minder effecten). "Performance uit.cmd" zet alles terug.
 
-Kan je niet joinen ("You are not white-listed")? Vraag de beheerder om je Minecraft-naam toe te voegen.
+Kan je niet joinen ("You are not white-listed")? Vraag de beheerder om je Minecraft-naam toe te voegen
+(exact zoals je hem typt, hoofdletters tellen mee).
 Skin instellen: typ in het spel /skin set <naam van een speler met de skin die je wil>.
 
 Lunar Client kan geen modpacks laden. Kies je 4, dan zet het script alles in de gewone Minecraft Launcher.

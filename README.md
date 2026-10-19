@@ -68,8 +68,17 @@ curl -fsSL https://raw.githubusercontent.com/weggos2000/modded_server_repo/main/
 ## Voor de beheerder: spelers toevoegen
 
 De server draait in **offline-mode** (ook cracked accounts kunnen joinen) met een **whitelist**.
-Iemand toevoegen: typ in de AMP-console `whitelist add <naam>`. Hoofdletters tellen mee, dus gebruik exact
-de naam waarmee die persoon speelt. Weghalen: `whitelist remove <naam>`.
+**Gebruik géén `/whitelist add`.** Dat zoekt de naam op bij Mojang en zet het premium-UUID op de lijst,
+terwijl de server in offline-mode een ander (offline) UUID gebruikt: de speler wordt dan toch geweigerd.
+
+Iemand toevoegen (via SSH op de AMP-server, als `amp`), daarna in de AMP-console `whitelist reload`:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/weggos2000/modded_server_repo/main/tools/whitelist-add.sh | bash -s -- Naam1 Naam2
+```
+
+Hoofdletters tellen mee: gebruik exact de naam waarmee die persoon speelt. Zonder namen controleert en
+herstelt het script alleen de bestaande lijst. Weghalen kan wel gewoon met `whitelist remove <naam>`.
 
 ## Voor de beheerder: mods aanpassen
 
