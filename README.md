@@ -68,7 +68,7 @@ curl -fsSL https://raw.githubusercontent.com/weggos2000/modded_server_repo/main/
 ## Modlijst
 
 <!-- MODLIST:START -->
-**374 mods** (67 daarvan alleen voor de client).
+**375 mods** (67 daarvan alleen voor de client).
 
 | Mod | Versie | Bestand | Alleen client |
 |---|---|---|---|
@@ -151,6 +151,7 @@ curl -fsSL https://raw.githubusercontent.com/weggos2000/modded_server_repo/main/
 | Create Deco | 2.1.1-1.20.1-fabric | `createdeco-2.1.1-1.20.1-fabric.jar` |  |
 | Create Slice & Dice | 3.5.2-fabric | `sliceanddice-fabric-3.5.2.jar` |  |
 | Create: Copycats+ | 3.0.7+mc.1.20.1-fabric | `copycats-3.0.7+mc.1.20.1-fabric.jar` |  |
+| Create: Numismatics | 1.1.0+fabric-mc1.20.1 | `CreateNumismatics-1.1.0+fabric-mc1.20.1.jar` |  |
 | Create: Oxidized | 0.1.1+1.20.1 | `create_oxidized-0.1.1+1.20.1.jar` |  |
 | Create: Steam 'n' Rails | 1.7.2+fabric-mc1.20.1 | `Steam_Rails-1.7.2+fabric-mc1.20.1.jar` |  |
 | CreativeCore | 2.12.36 | `CreativeCore_FABRIC_v2.12.36_mc1.20.1.jar` |  |
