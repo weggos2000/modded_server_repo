@@ -1,7 +1,7 @@
 # Homestead School – mods
 
-De mods voor onze Minecraft-server **Homestead School**. Met één command staat jouw mods-map
-exact gelijk aan die van de server, ook als we later mods toevoegen of weghalen.
+Alles voor onze Minecraft-server **Homestead School**. Met één command installeer je de hele modpack,
+exact gelijk aan de server, ook als we later mods toevoegen of weghalen.
 
 | | |
 |---|---|
@@ -10,45 +10,49 @@ exact gelijk aan die van de server, ook als we later mods toevoegen of weghalen.
 | **Voice chat** | Simple Voice Chat, werkt automatisch (toets **V** voor het menu) |
 | **Geld & shops** | Create: Numismatics: munten, bank en **Vendors** (je eigen winkel) |
 
-## Installeren (eerste keer)
+## Installeren en updaten (Windows)
 
-1. Installeer **Homestead – A Cozy Survival Experience 1.3.7** via de [CurseForge-app](https://www.curseforge.com/download/app)
-   (of Prism Launcher / Modrinth App). Zo krijg je ook alle configs, resourcepacks en shaders.
-2. Start het spel één keer en sluit het weer af.
-3. Voer het command hieronder uit om de mods te synchroniseren.
-4. Start Minecraft en join `jakarta-tvs.tun.ply.gg`.
+Je hebt alleen Minecraft Java nodig (gekocht, met de gewone launcher of Prism). Verder niets.
 
-## Mods synchroniseren
+1. **Sluit Minecraft en je launcher.**
+2. Druk op **Win + R**, plak dit en druk op **Enter**:
 
-Sluit Minecraft eerst af. Doe dit ook telkens als er gezegd wordt dat de mods veranderd zijn.
+   ```powershell
+   powershell -NoProfile -ExecutionPolicy Bypass -Command "& ([scriptblock]::Create((irm 'https://raw.githubusercontent.com/weggos2000/modded_server_repo/main/install.ps1')))"
+   ```
 
-### Windows
+3. Kies je launcher:
+   - **1 – Gewone Minecraft Launcher:** je krijgt een profiel **Homestead School**.
+   - **2 – Prism Launcher:** je krijgt een instance **Homestead School**.
+   - **3 – Andere launcher** (Modrinth App, ATLauncher, CurseForge, …): maak zelf een instance met
+     Minecraft **1.20.1** + Fabric **0.18.4** en plak de map ervan.
+4. Wacht tot er **Klaar!** staat (de eerste keer ±700 MB downloaden).
+5. Start het profiel/de instance **Homestead School**. De eerste keer opstarten duurt een paar minuten.
+   De server staat al in je **Multiplayer**-lijst.
 
-Druk op **Win + R**, plak dit en druk op Enter (of plak het in PowerShell):
+**Updaten** doe je met exact hetzelfde command. Alleen wat veranderd is, wordt opnieuw gezet.
 
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -Command "& ([scriptblock]::Create((irm 'https://raw.githubusercontent.com/weggos2000/modded_server_repo/main/install.ps1')))"
-```
+> **Lunar Client werkt niet.** Lunar kan geen modpacks laden; gebruik de gewone launcher of Prism.
 
-Het script zoekt zelf je Homestead-instance in CurseForge, Prism en Modrinth. Vindt het er geen,
-dan vraagt het om het pad. Je kunt het pad ook zelf meegeven:
+### Wat doet het script?
 
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -Command "& ([scriptblock]::Create((irm 'https://raw.githubusercontent.com/weggos2000/modded_server_repo/main/install.ps1'))) -InstancePath 'C:\Users\JIJ\curseforge\minecraft\Instances\Homestead - A Cozy Survival Experience'"
-```
+- Zet **Fabric** voor Minecraft 1.20.1 klaar en maakt het profiel/de instance aan (met genoeg RAM).
+- Haalt de officiële **Homestead 1.3.7**-pack van CurseForge (configs, quests, resourcepacks, shaders).
+  Dat gebeurt maar één keer; daarna blijven jouw instellingen staan.
+- Zet de **mods** uit deze repo erin, exact gelijk aan de server. Mods die er niet meer bij horen,
+  gaan naar `mods-backup/<datum>/`. Er wordt dus nooit iets definitief verwijderd.
+- Zet de server in je serverlijst.
+
+De gewone launcher installeert alles in `%APPDATA%\.homestead-school`, los van je normale Minecraft.
 
 ### macOS / Linux
+
+Hier synct het script alleen de mods. Installeer eerst Homestead 1.3.7 via Prism of de CurseForge-app,
+en draai daarna:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/weggos2000/modded_server_repo/main/install.sh | bash -s -- "/pad/naar/je/instance"
 ```
-
-### Wat doet het script?
-
-- Het downloadt de mods uit deze repo (±570 MB).
-- Nieuwe en gewijzigde mods worden in je `mods`-map gezet.
-- Mods die **niet** in deze repo staan, worden verplaatst naar `mods-backup/<datum>/` in je instance.
-  Er wordt dus nooit iets definitief verwijderd.
 
 ## Munten maken
 
@@ -69,7 +73,7 @@ Munten maken gaat in twee stappen, net als in de mod *Create: Numismatics Crafti
 | Sun | crown + netherite sheet + groot tandwiel |
 
 De unpolished munten zijn eigen items (`shared/kubejs/`). Het sync-script zet die ook bij jou neer.
-**Zonder die bestanden kan je niet joinen**, dus draai het sync-command na elke update.
+**Zonder die bestanden kan je niet joinen**, dus draai het install-command na elke update.
 De recepten staan in `server/kubejs/server_scripts/numismatics_crafting.js` en draaien alleen op de server.
 
 ## Voor de beheerder: mods aanpassen
@@ -87,7 +91,9 @@ De recepten staan in `server/kubejs/server_scripts/numismatics_crafting.js` en d
    ```bash
    curl -fsSL https://raw.githubusercontent.com/weggos2000/modded_server_repo/main/tools/sync-server.sh | bash
    ```
-   Daarna de server opnieuw starten. Laat iedereen ook het sync-command opnieuw draaien.
+   Daarna de server opnieuw starten. Laat iedereen ook het install-command opnieuw draaien.
+6. Andere Homestead-versie? Pas `packVersion`/`packUrl` in `pack.json` aan. Bij de volgende run
+   zet het install-script dan bij iedereen de nieuwe configs neer.
 
 ## Modlijst
 

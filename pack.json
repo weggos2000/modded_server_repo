@@ -1,0 +1,17 @@
+{
+  "name": "Homestead School",
+  "pack": "Homestead - A Cozy Survival Experience",
+  "packVersion": "1.3.7",
+  "packUrl": "https://www.curseforge.com/api/v1/mods/1258033/files/8110152/download",
+  "minecraft": "1.20.1",
+  "fabricLoader": "0.18.4",
+  "server": "jakarta-tvs.tun.ply.gg",
+  "extras": [
+    { "file": "Fancy_Beds-v4.1.zip",        "dir": "resourcepacks", "url": "https://www.curseforge.com/api/v1/mods/509339/files/7148803/download" },
+    { "file": "Stay_True_1.20.zip",         "dir": "resourcepacks", "url": "https://www.curseforge.com/api/v1/mods/353554/files/4624707/download" },
+    { "file": "MakeUp-UltraFast-9.4b.zip",  "dir": "shaderpacks",   "url": "https://www.curseforge.com/api/v1/mods/431203/files/7520157/download" },
+    { "file": "Nostalgia_v5.1.zip",         "dir": "shaderpacks",   "url": "https://www.curseforge.com/api/v1/mods/326302/files/6247535/download" },
+    { "file": "PotatoShaders_v1.0d.zip",    "dir": "shaderpacks",   "url": "https://www.curseforge.com/api/v1/mods/467280/files/4584380/download" },
+    { "file": "superDuperVanilla.zip",      "dir": "shaderpacks",   "url": "https://www.curseforge.com/api/v1/mods/534748/files/6745820/download" }
+  ]
+}
