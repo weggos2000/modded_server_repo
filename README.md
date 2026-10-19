@@ -9,10 +9,12 @@ exact gelijk aan de server, ook als we later mods toevoegen of weghalen.
 | **Modpack** | Homestead – A Cozy Survival Experience **1.3.7** (Fabric, Minecraft 1.20.1) |
 | **Voice chat** | Simple Voice Chat, werkt automatisch (toets **V** voor het menu) |
 | **Geld & shops** | Create: Numismatics: munten, bank en **Vendors** (je eigen winkel) |
+| **Toegang** | Whitelist: vraag de beheerder om je Minecraft-naam toe te voegen |
+| **Skins** | Ook zonder premium-account: `/skin set <naam van een skin/speler>` |
 
 ## Installeren en updaten (Windows)
 
-Je hebt alleen Minecraft Java nodig (gekocht, met de gewone launcher of Prism). Verder niets.
+Je hebt Minecraft Java 1.20.1 nodig. Verder niets.
 
 1. **Sluit Minecraft en je launcher.**
 2. Download **[HomesteadSchool-Installer.zip](https://github.com/weggos2000/modded_server_repo/raw/main/HomesteadSchool-Installer.zip)**,
@@ -30,6 +32,15 @@ Je hebt alleen Minecraft Java nodig (gekocht, met de gewone launcher of Prism). 
    De server staat al in je **Multiplayer**-lijst.
 
 **Updaten:** dubbelklik gewoon opnieuw op **Installeren.cmd**. Alleen wat veranderd is, wordt opnieuw gezet.
+
+### Performance-modus (laptops)
+
+Bij het installeren kies je **Normaal** of **Performance**. Performance zet 14 zware sfeer-mods uit
+(geluiden, deeltjes, animaties, 3D-skins, …), voegt FPS-mods toe (Dynamic FPS, BadOptimizations) en zet
+lichtere instellingen (render distance 8, graphics Fast, minder deeltjes). Je speelt gewoon op dezelfde server.
+
+Wisselen kan altijd, zonder opnieuw te downloaden: sluit Minecraft en dubbelklik op
+**Performance aan.cmd** of **Performance uit.cmd**. Bij *uit* komen alle mods en je eigen instellingen terug.
 
 > Plak **nooit** commando's van internet in Win + R of PowerShell. Zo werkt echte malware ("ClickFix"),
 > en Windows Defender blokkeert dat terecht. Daarom gebruiken we een gewoon bestand.
@@ -54,10 +65,18 @@ en draai daarna:
 curl -fsSL https://raw.githubusercontent.com/weggos2000/modded_server_repo/main/install.sh | bash -s -- "/pad/naar/je/instance"
 ```
 
+## Voor de beheerder: spelers toevoegen
+
+De server draait in **offline-mode** (ook cracked accounts kunnen joinen) met een **whitelist**.
+Iemand toevoegen: typ in de AMP-console `whitelist add <naam>`. Hoofdletters tellen mee, dus gebruik exact
+de naam waarmee die persoon speelt. Weghalen: `whitelist remove <naam>`.
+
 ## Voor de beheerder: mods aanpassen
 
 1. Zet de nieuwe `.jar` in `mods/` (of haal er een weg). Gebruik altijd de **Fabric 1.20.1**-versie.
 2. Is de mod alleen voor de client (minimap, shaders, geluid, …)? Zet de bestandsnaam dan in `client-only.txt`.
+   Alleen voor de server (bv. SkinRestorer)? Zet de jar dan in `server/mods/` in plaats van `mods/`.
+   Moet een zware client-mod uit in performance-modus? Zet hem in `performance/remove.txt`.
    Bestanden die alleen op de server moeten (zoals KubeJS-recepten) zet je in `server/`. Bestanden die op client
    **én** server moeten (zoals KubeJS-items en textures) zet je in `shared/`. Gebruik in beide dezelfde mappenstructuur als de instance.
 3. Werk de modlijst hieronder bij:
