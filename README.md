@@ -9,6 +9,7 @@ exact gelijk aan die van de server, ook als we later mods toevoegen of weghalen.
 | **Modpack** | Homestead – A Cozy Survival Experience **1.3.7** (Fabric, Minecraft 1.20.1) |
 | **Voice chat** | Simple Voice Chat, werkt automatisch (toets **V** voor het menu) |
 | **Shops** | Spud's Shops |
+| **Geld** | Create: Numismatics (munten, bank, vendors) |
 
 ## Installeren (eerste keer)
 
@@ -50,10 +51,28 @@ curl -fsSL https://raw.githubusercontent.com/weggos2000/modded_server_repo/main/
 - Mods die **niet** in deze repo staan, worden verplaatst naar `mods-backup/<datum>/` in je instance.
   Er wordt dus nooit iets definitief verwijderd.
 
+## Munten maken
+
+Munten maak je met een **Mechanical Press boven een Basin** (Create *Compacting*).
+Leg de ingrediënten in het basin:
+
+| Munt | Ingrediënten |
+|---|---|
+| Spur | koperklompje + tandwiel |
+| Bevel | crushed raw zinc + tandwiel |
+| Sprocket | ijzeren plaat (iron sheet) + groot tandwiel |
+| Cog | messing staaf (brass ingot) + groot tandwiel |
+| Crown | goudblok + groot tandwiel |
+| Sun | crown + netherite sheet + groot tandwiel |
+
+De recepten staan in `server/kubejs/server_scripts/numismatics_crafting.js` en draaien alleen op de server.
+Je hoeft er zelf niets voor te installeren.
+
 ## Voor de beheerder: mods aanpassen
 
 1. Zet de nieuwe `.jar` in `mods/` (of haal er een weg). Gebruik altijd de **Fabric 1.20.1**-versie.
 2. Is de mod alleen voor de client (minimap, shaders, geluid, …)? Zet de bestandsnaam dan in `client-only.txt`.
+   Bestanden die alleen op de server moeten (zoals KubeJS-recepten) zet je in `server/`, met dezelfde mappenstructuur als de instance.
 3. Werk de modlijst hieronder bij:
    ```powershell
    powershell -ExecutionPolicy Bypass -File tools\update-modlist.ps1

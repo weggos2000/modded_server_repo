@@ -9,6 +9,7 @@ REPO="weggos2000/modded_server_repo"
 BRANCH="main"
 INSTANCE="${1:-$HOME/.ampdata/instances/HomesteadSchool01/Minecraft}"
 MODS="$INSTANCE/mods"
+chmod u+w "$MODS"   # de server pack levert een read-only mods-map
 
 WORK="$(mktemp -d)"
 trap 'rm -rf "$WORK"' EXIT
@@ -40,5 +41,11 @@ for f in "$SRC"/*.jar; do
   cp "$f" "$MODS/$n"
 done
 echo "Server-mods klaar: nieuw $added, bijgewerkt $updated, ongewijzigd $same, weggehaald $removed"
+
+# Eigen serverbestanden (bv. KubeJS-recepten) uit server/ over de instance heen zetten
+if [ -d "$ROOT/server" ]; then
+  cp -r "$ROOT/server/." "$INSTANCE/"
+  echo "Serverbestanden uit server/ gekopieerd (o.a. kubejs/server_scripts)."
+fi
 [ $((removed+updated)) -gt 0 ] && echo "Backup: $BACKUP"
 echo "Start de server nu opnieuw in AMP."
