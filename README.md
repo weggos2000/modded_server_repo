@@ -15,24 +15,24 @@ exact gelijk aan de server, ook als we later mods toevoegen of weghalen.
 Je hebt alleen Minecraft Java nodig (gekocht, met de gewone launcher of Prism). Verder niets.
 
 1. **Sluit Minecraft en je launcher.**
-2. Druk op **Win + R**, plak dit en druk op **Enter**:
-
-   ```powershell
-   powershell -NoProfile -ExecutionPolicy Bypass -Command "& ([scriptblock]::Create((irm 'https://raw.githubusercontent.com/weggos2000/modded_server_repo/main/install.ps1')))"
-   ```
-
+2. Download **[HomesteadSchool-Installer.zip](https://github.com/weggos2000/modded_server_repo/raw/main/HomesteadSchool-Installer.zip)**,
+   pak hem uit (rechtsklik → *Alles uitpakken*) en dubbelklik op **Installeren.cmd**.
+   Zie je *"Windows heeft uw pc beschermd"*? Klik dan op **Meer informatie** → **Toch uitvoeren**.
 3. Kies je launcher:
    - **1 – Gewone Minecraft Launcher:** je krijgt een profiel **Homestead School**.
    - **2 – Prism Launcher:** je krijgt een instance **Homestead School**.
    - **3 – Andere launcher** (Modrinth App, ATLauncher, CurseForge, …): maak zelf een instance met
      Minecraft **1.20.1** + Fabric **0.18.4** en plak de map ervan.
+   - **4 – Lunar Client:** Lunar kan geen modpacks laden. Het script biedt aan om alles in de gewone
+     Minecraft Launcher te zetten; daar log je in met hetzelfde Microsoft-account.
 4. Wacht tot er **Klaar!** staat (de eerste keer ±700 MB downloaden).
 5. Start het profiel/de instance **Homestead School**. De eerste keer opstarten duurt een paar minuten.
    De server staat al in je **Multiplayer**-lijst.
 
-**Updaten** doe je met exact hetzelfde command. Alleen wat veranderd is, wordt opnieuw gezet.
+**Updaten:** dubbelklik gewoon opnieuw op **Installeren.cmd**. Alleen wat veranderd is, wordt opnieuw gezet.
 
-> **Lunar Client werkt niet.** Lunar kan geen modpacks laden; gebruik de gewone launcher of Prism.
+> Plak **nooit** commando's van internet in Win + R of PowerShell. Zo werkt echte malware ("ClickFix"),
+> en Windows Defender blokkeert dat terecht. Daarom gebruiken we een gewoon bestand.
 
 ### Wat doet het script?
 
@@ -73,7 +73,7 @@ Munten maken gaat in twee stappen, net als in de mod *Create: Numismatics Crafti
 | Sun | crown + netherite sheet + groot tandwiel |
 
 De unpolished munten zijn eigen items (`shared/kubejs/`). Het sync-script zet die ook bij jou neer.
-**Zonder die bestanden kan je niet joinen**, dus draai het install-command na elke update.
+**Zonder die bestanden kan je niet joinen**, dus dubbelklik na elke update opnieuw op **Installeren.cmd**.
 De recepten staan in `server/kubejs/server_scripts/numismatics_crafting.js` en draaien alleen op de server.
 
 ## Voor de beheerder: mods aanpassen
@@ -91,8 +91,11 @@ De recepten staan in `server/kubejs/server_scripts/numismatics_crafting.js` en d
    ```bash
    curl -fsSL https://raw.githubusercontent.com/weggos2000/modded_server_repo/main/tools/sync-server.sh | bash
    ```
-   Daarna de server opnieuw starten. Laat iedereen ook het install-command opnieuw draaien.
-6. Andere Homestead-versie? Pas `packVersion`/`packUrl` in `pack.json` aan. Bij de volgende run
+   Daarna de server opnieuw starten. Laat iedereen ook opnieuw **Installeren.cmd** draaien.
+6. `install.ps1` aangepast? Verhoog `$InstallerVersion` in het script **en** `installerVersion` in `pack.json`,
+   en bouw de zip opnieuw: `powershell -ExecutionPolicy Bypass -File tools\build-installer.ps1`.
+   Wie een oude installer gebruikt, krijgt dan een melding om de nieuwe te downloaden.
+7. Andere Homestead-versie? Pas `packVersion`/`packUrl` in `pack.json` aan. Bij de volgende run
    zet het install-script dan bij iedereen de nieuwe configs neer.
 
 ## Modlijst

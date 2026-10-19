@@ -8,8 +8,7 @@
     - de mods + KubeJS-bestanden uit deze repo (exact gelijk aan de server)
     - de server in je serverlijst
 
-  Gebruik (zie README):
-    powershell -NoProfile -ExecutionPolicy Bypass -Command "& ([scriptblock]::Create((irm 'https://raw.githubusercontent.com/weggos2000/modded_server_repo/main/install.ps1')))"
+  Gebruik (zie README): download HomesteadSchool-Installer.zip, pak uit en dubbelklik Installeren.cmd
 
   Opties (meestal niet nodig):
     -Launcher official|prism|folder   launcher kiezen zonder menu
@@ -35,6 +34,7 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
 
 $Repo   = 'weggos2000/modded_server_repo'
 $Branch = 'main'
+$InstallerVersion = 2   # verhogen bij elke wijziging aan dit script (ook in pack.json zetten)
 
 function Write-Step($msg) { Write-Host "==> $msg" -ForegroundColor Cyan }
 function Write-Warn($msg) { Write-Host "    $msg" -ForegroundColor Yellow }
@@ -68,6 +68,11 @@ try {
     }
     $Pack = Get-Content -LiteralPath (Join-Path $RepoRoot 'pack.json') -Raw | ConvertFrom-Json
     $FabricId = "fabric-loader-$($Pack.fabricLoader)-$($Pack.minecraft)"
+    if ([int]$Pack.installerVersion -gt $InstallerVersion) {
+        Write-Warn "Er is een nieuwere installer. Download HomesteadSchool-Installer.zip opnieuw van:"
+        Write-Warn "https://github.com/$Repo"
+        Write-Warn "(Deze versie gaat nu gewoon verder.)"
+    }
 
     # --- 2. Launcher kiezen ---------------------------------------------------
     if (-not $Launcher) {
@@ -78,8 +83,16 @@ try {
             Write-Host "  [1] Gewone Minecraft Launcher"
             Write-Host ("  [2] Prism Launcher" + $(if ($hasPrism) { "   (gevonden op deze pc)" } else { "" }))
             Write-Host "  [3] Andere launcher (Modrinth App, ATLauncher, CurseForge, ...) - jij kiest de map"
-            Write-Host "  (Lunar Client werkt niet met modpacks: kies dan 1 of 2)"
-            do { $choice = Read-Host "Kies 1, 2 of 3" } while ($choice -notin '1', '2', '3')
+            Write-Host "  [4] Lunar Client"
+            do { $choice = Read-Host "Kies 1, 2, 3 of 4" } while ($choice -notin '1', '2', '3', '4')
+            if ($choice -eq '4') {
+                Write-Host ""
+                Write-Warn "Lunar Client kan geen modpacks laden (alleen zijn eigen mods), dus Homestead werkt daar niet."
+                Write-Warn "Je kan het wel in de gewone Minecraft Launcher zetten: daar log je in met hetzelfde Microsoft-account."
+                $ok = Read-Host "Installeren in de gewone Minecraft Launcher? (j/n)"
+                if ($ok -notmatch '^[jJyY]') { Write-Host "Oke, er is niets geinstalleerd."; Stop-WithPause 0 }
+                $choice = '1'
+            }
             $Launcher = @{ '1' = 'official'; '2' = 'prism'; '3' = 'folder' }[$choice]
         }
     }

@@ -1,0 +1,15 @@
+Homestead School installer
+==========================
+
+1. Sluit Minecraft en je launcher.
+2. Dubbelklik op "Installeren.cmd".
+   Zie je een blauw venster "Windows heeft uw pc beschermd"?
+   Klik dan op "Meer informatie" en daarna op "Toch uitvoeren".
+3. Kies je launcher (1 = gewone Minecraft Launcher, 2 = Prism, 3 = andere, 4 = Lunar).
+4. Wacht tot er "Klaar!" staat. De eerste keer duurt dat even (ca. 700 MB).
+5. Start "Homestead School" in je launcher. De server staat al in je Multiplayer-lijst.
+
+Updaten: gewoon opnieuw dubbelklikken op "Installeren.cmd".
+
+Lunar Client kan geen modpacks laden. Kies je 4, dan zet het script alles in de gewone Minecraft Launcher.
+Meer info: https://github.com/weggos2000/modded_server_repo
