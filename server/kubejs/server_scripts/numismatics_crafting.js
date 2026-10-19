@@ -1,13 +1,21 @@
 // Homestead School - craftbare Numismatics-munten
-// Zelfde ingrediënten als de Forge-mod "Create: Numismatics Crafting" (die bestaat niet voor Fabric),
-// maar de pers (Mechanical Press boven een Basin = Create Compacting) geeft meteen de munt.
+// Zoals de Forge-mod "Create: Numismatics Crafting" (bestaat niet voor Fabric):
+//   1. Mechanical Press boven een Basin (Create Compacting)  -> unpolished munt
+//   2. Wassen met een Encased Fan door water (Create Splashing) -> echte munt
+// De unpolished items komen uit kubejs/startup_scripts/numismatics_unpolished.js
 ServerEvents.recipes(event => {
     const coin = (name, ingredients) => {
         event.custom({
             type: 'create:compacting',
             ingredients: ingredients,
+            results: [{ item: `kubejs:unpolished_${name}`, count: 1 }]
+        }).id(`homestead_school:numismatics/press_${name}`)
+
+        event.custom({
+            type: 'create:splashing',
+            ingredients: [{ item: `kubejs:unpolished_${name}` }],
             results: [{ item: `numismatics:${name}`, count: 1 }]
-        }).id(`homestead_school:numismatics/${name}`)
+        }).id(`homestead_school:numismatics/polish_${name}`)
     }
 
     coin('spur',     [{ tag: 'c:copper_nuggets' },       { item: 'create:cogwheel' }])

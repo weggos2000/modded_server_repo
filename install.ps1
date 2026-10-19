@@ -125,9 +125,23 @@ try {
         Copy-Item -LiteralPath $s.FullName -Destination $target -Force
     }
 
+    # --- 5. Gedeelde bestanden (KubeJS-items + textures) ---------------------
+    $sharedDir = Join-Path (Split-Path $SrcDir -Parent) 'shared'
+    $sharedCount = 0
+    if (Test-Path -LiteralPath $sharedDir) {
+        Get-ChildItem -LiteralPath $sharedDir -Recurse -File | ForEach-Object {
+            $rel = $_.FullName.Substring($sharedDir.Length).TrimStart('\', '/')
+            $dst = Join-Path $InstancePath $rel
+            New-Item -ItemType Directory -Force -Path (Split-Path $dst -Parent) | Out-Null
+            Copy-Item -LiteralPath $_.FullName -Destination $dst -Force
+            $sharedCount++
+        }
+    }
+
     Write-Host ""
     Write-Host "Klaar! $($src.Count) mods in je mods-map." -ForegroundColor Green
     Write-Host "  nieuw: $added   bijgewerkt: $updated   ongewijzigd: $same   weggehaald: $removed"
+    if ($sharedCount -gt 0) { Write-Host "  + $sharedCount extra bestanden (KubeJS) bijgewerkt" }
     if ($removed + $updated -gt 0) { Write-Host "  Oude/weggehaalde mods staan in: $backupDir" }
 }
 finally {

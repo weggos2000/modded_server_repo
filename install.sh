@@ -56,6 +56,8 @@ for f in "$SRC"/*.jar; do
   fi
   cp "$f" "$MODS/$n"
 done
+SHARED="$(dirname "$SRC")/shared"
+if [ -d "$SHARED" ]; then cp -R "$SHARED/." "$INSTANCE/"; echo "Extra bestanden (KubeJS) bijgewerkt."; fi
 echo "Klaar! nieuw: $added  bijgewerkt: $updated  ongewijzigd: $same  weggehaald: $removed"
 [ $((removed+updated)) -gt 0 ] && echo "Oude mods staan in: $BACKUP"
 exit 0

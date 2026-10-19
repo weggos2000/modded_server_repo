@@ -42,10 +42,12 @@ for f in "$SRC"/*.jar; do
 done
 echo "Server-mods klaar: nieuw $added, bijgewerkt $updated, ongewijzigd $same, weggehaald $removed"
 
-# Eigen serverbestanden (bv. KubeJS-recepten) uit server/ over de instance heen zetten
-if [ -d "$ROOT/server" ]; then
-  cp -r "$ROOT/server/." "$INSTANCE/"
-  echo "Serverbestanden uit server/ gekopieerd (o.a. kubejs/server_scripts)."
-fi
+# Gedeelde bestanden (client + server, bv. KubeJS-items) en serverbestanden (bv. KubeJS-recepten)
+for extra in shared server; do
+  if [ -d "$ROOT/$extra" ]; then
+    cp -r "$ROOT/$extra/." "$INSTANCE/"
+    echo "Bestanden uit $extra/ gekopieerd."
+  fi
+done
 [ $((removed+updated)) -gt 0 ] && echo "Backup: $BACKUP"
 echo "Start de server nu opnieuw in AMP."

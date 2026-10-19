@@ -53,10 +53,14 @@ curl -fsSL https://raw.githubusercontent.com/weggos2000/modded_server_repo/main/
 
 ## Munten maken
 
-Munten maak je met een **Mechanical Press boven een Basin** (Create *Compacting*).
-Leg de ingrediënten in het basin:
+Munten maken gaat in twee stappen, net als in de mod *Create: Numismatics Crafting*:
 
-| Munt | Ingrediënten |
+1. **Persen:** leg de ingrediënten in een **Basin** met een **Mechanical Press** erboven (Create *Compacting*).
+   Je krijgt een **Unpolished**-munt.
+2. **Polijsten:** blaas de unpolished munt met een **Encased Fan** door **water** (Create *Washing*),
+   bijvoorbeeld op een depot of mechanical belt voor de fan. Dan krijg je de echte munt.
+
+| Munt | Ingrediënten (stap 1) |
 |---|---|
 | Spur | koperklompje + tandwiel |
 | Bevel | crushed raw zinc + tandwiel |
@@ -65,14 +69,16 @@ Leg de ingrediënten in het basin:
 | Crown | goudblok + groot tandwiel |
 | Sun | crown + netherite sheet + groot tandwiel |
 
+De unpolished munten zijn eigen items (`shared/kubejs/`). Het sync-script zet die ook bij jou neer.
+**Zonder die bestanden kan je niet joinen**, dus draai het sync-command na elke update.
 De recepten staan in `server/kubejs/server_scripts/numismatics_crafting.js` en draaien alleen op de server.
-Je hoeft er zelf niets voor te installeren.
 
 ## Voor de beheerder: mods aanpassen
 
 1. Zet de nieuwe `.jar` in `mods/` (of haal er een weg). Gebruik altijd de **Fabric 1.20.1**-versie.
 2. Is de mod alleen voor de client (minimap, shaders, geluid, …)? Zet de bestandsnaam dan in `client-only.txt`.
-   Bestanden die alleen op de server moeten (zoals KubeJS-recepten) zet je in `server/`, met dezelfde mappenstructuur als de instance.
+   Bestanden die alleen op de server moeten (zoals KubeJS-recepten) zet je in `server/`. Bestanden die op client
+   **én** server moeten (zoals KubeJS-items en textures) zet je in `shared/`. Gebruik in beide dezelfde mappenstructuur als de instance.
 3. Werk de modlijst hieronder bij:
    ```powershell
    powershell -ExecutionPolicy Bypass -File tools\update-modlist.ps1
