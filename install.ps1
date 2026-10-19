@@ -13,11 +13,18 @@
   Opties (meestal niet nodig):
     -Launcher official|prism|folder   launcher kiezen zonder menu
     -InstancePath <map>               (bij "folder") de game-map van je instance
+    -Mode normal|performance          modus kiezen zonder menu
+    -SetMode normal|performance       alleen snel wisselen van modus (geen download)
 #>
 param(
     [ValidateSet('', 'official', 'prism', 'folder')]
     [string]$Launcher = '',
     [string]$InstancePath,
+    [ValidateSet('', 'normal', 'performance')]
+    [string]$Mode = '',
+    [ValidateSet('', 'normal', 'performance')]
+    [string]$SetMode = '',
+    [string]$InstallsFile = "$env:LOCALAPPDATA\HomesteadSchool\installs.txt",
     # --- voor testen / gevorderden ---
     [string]$MinecraftDir = "$env:APPDATA\.minecraft",
     [string]$PrismDir = "$env:APPDATA\PrismLauncher",
@@ -34,7 +41,7 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
 
 $Repo   = 'weggos2000/modded_server_repo'
 $Branch = 'main'
-$InstallerVersion = 2   # verhogen bij elke wijziging aan dit script (ook in pack.json zetten)
+$InstallerVersion = 3   # verhogen bij elke wijziging aan dit script (ook in pack.json zetten)
 
 function Write-Step($msg) { Write-Host "==> $msg" -ForegroundColor Cyan }
 function Write-Warn($msg) { Write-Host "    $msg" -ForegroundColor Yellow }
@@ -46,6 +53,129 @@ function Stop-WithPause($code) {
     exit $code
 }
 
+# --- Performance-modus -------------------------------------------------------
+# Alles staat in <game>\.homestead :
+#   mode.txt               normal / performance
+#   remove.txt             mods die in performance-modus weg moeten
+#   perf-mods\*.jar        extra FPS-mods voor performance-modus
+#   perf-options.txt       lichtere grafische instellingen
+#   disabled-mods\         hier staan de weggehaalde mods tijdens performance-modus
+#   options-backup-*.txt   jouw eigen instellingen, om terug te zetten bij normaal
+function Get-StateDir($game) { Join-Path $game '.homestead' }
+
+function Get-CurrentMode($game) {
+    $f = Join-Path (Get-StateDir $game) 'mode.txt'
+    if (Test-Path -LiteralPath $f) { (Get-Content -LiteralPath $f -Raw).Trim() } else { 'normal' }
+}
+
+function Set-ModeMarker($game, $m) {
+    $st = Get-StateDir $game
+    New-Item -ItemType Directory -Force -Path $st | Out-Null
+    Write-Utf8 (Join-Path $st 'mode.txt') $m
+}
+
+function Get-OptionFiles($game) {
+    @(
+        @{ File = Join-Path $game 'options.txt'; Backup = 'options-backup-main.txt' },
+        @{ File = Join-Path $game 'config\defaultoptions\options.txt'; Backup = 'options-backup-default.txt' }
+    )
+}
+
+function Read-Lines($path) { if (Test-Path -LiteralPath $path) { @(Get-Content -LiteralPath $path) } else { @() } }
+
+function Restore-PerfMods($game) {
+    # mods uit performance-modus terugzetten en de extra FPS-mods weghalen
+    $st = Get-StateDir $game
+    $mods = Join-Path $game 'mods'
+    $dis = Join-Path $st 'disabled-mods'
+    if (Test-Path -LiteralPath $dis) {
+        Get-ChildItem -LiteralPath $dis -Filter *.jar | ForEach-Object {
+            Move-Item -LiteralPath $_.FullName -Destination (Join-Path $mods $_.Name) -Force
+        }
+    }
+    $perf = Join-Path $st 'perf-mods'
+    if (Test-Path -LiteralPath $perf) {
+        Get-ChildItem -LiteralPath $perf -Filter *.jar | ForEach-Object {
+            $p = Join-Path $mods $_.Name
+            if (Test-Path -LiteralPath $p) { Remove-Item -LiteralPath $p -Force }
+        }
+    }
+}
+
+function Apply-PerfMods($game) {
+    $st = Get-StateDir $game
+    $mods = Join-Path $game 'mods'
+    $dis = Join-Path $st 'disabled-mods'
+    New-Item -ItemType Directory -Force -Path $dis | Out-Null
+    $n = 0
+    foreach ($name in (Read-Lines (Join-Path $st 'remove.txt'))) {
+        $name = $name.Trim()
+        if (-not $name -or $name.StartsWith('#')) { continue }
+        $p = Join-Path $mods $name
+        if (Test-Path -LiteralPath $p) { Move-Item -LiteralPath $p -Destination (Join-Path $dis $name) -Force; $n++ }
+    }
+    $perf = Join-Path $st 'perf-mods'
+    if (Test-Path -LiteralPath $perf) {
+        Get-ChildItem -LiteralPath $perf -Filter *.jar | ForEach-Object {
+            Copy-Item -LiteralPath $_.FullName -Destination (Join-Path $mods $_.Name) -Force
+        }
+    }
+    Write-Host "    $n zware mods uitgezet, FPS-mods aangezet."
+}
+
+function Apply-PerfOptions($game) {
+    # lichtere instellingen zetten; eigen waarden eerst bewaren (alleen als er nog geen backup is)
+    $st = Get-StateDir $game
+    $patch = [ordered]@{}
+    foreach ($l in (Read-Lines (Join-Path $st 'perf-options.txt'))) {
+        $i = $l.IndexOf(':'); if ($i -gt 0) { $patch[$l.Substring(0, $i)] = $l.Substring($i + 1) }
+    }
+    foreach ($o in (Get-OptionFiles $game)) {
+        if (-not (Test-Path -LiteralPath $o.File)) { continue }
+        $lines = [System.Collections.ArrayList]@(Read-Lines $o.File)
+        $backup = Join-Path $st $o.Backup
+        $orig = New-Object System.Collections.ArrayList
+        foreach ($key in $patch.Keys) {
+            $idx = -1
+            for ($k = 0; $k -lt $lines.Count; $k++) { if ($lines[$k].StartsWith("$($key):")) { $idx = $k; break } }
+            if ($idx -ge 0) { [void]$orig.Add($lines[$idx]); $lines[$idx] = "$($key):$($patch[$key])" }
+            else { [void]$orig.Add("$($key):<absent>"); [void]$lines.Add("$($key):$($patch[$key])") }
+        }
+        if (-not (Test-Path -LiteralPath $backup)) { Write-Utf8 $backup (($orig -join "`n") + "`n") }
+        Write-Utf8 $o.File (($lines -join "`n") + "`n")
+    }
+}
+
+function Restore-Options($game) {
+    $st = Get-StateDir $game
+    $defaultBackup = Join-Path $st 'options-backup-default.txt'
+    foreach ($o in (Get-OptionFiles $game)) {
+        $backup = Join-Path $st $o.Backup
+        $delete = $true
+        # options.txt bestond nog niet bij het aanzetten (Minecraft nog nooit gestart)? Dan de standaardwaarden gebruiken.
+        if (-not (Test-Path -LiteralPath $backup) -and $o.Backup -eq 'options-backup-main.txt' -and (Test-Path -LiteralPath $defaultBackup)) {
+            $backup = $defaultBackup; $delete = $false
+        }
+        if (-not (Test-Path -LiteralPath $backup) -or -not (Test-Path -LiteralPath $o.File)) { continue }
+        $lines = [System.Collections.ArrayList]@(Read-Lines $o.File)
+        foreach ($b in (Read-Lines $backup)) {
+            $i = $b.IndexOf(':'); if ($i -le 0) { continue }
+            $key = $b.Substring(0, $i)
+            for ($k = $lines.Count - 1; $k -ge 0; $k--) { if ($lines[$k].StartsWith("$($key):")) { $lines.RemoveAt($k) } }
+            if ($b.Substring($i + 1) -ne '<absent>') { [void]$lines.Add($b) }
+        }
+        Write-Utf8 $o.File (($lines -join "`n") + "`n")
+        if ($delete) { Remove-Item -LiteralPath $backup -Force }
+    }
+}
+
+function Register-Install($game) {
+    New-Item -ItemType Directory -Force -Path (Split-Path $InstallsFile -Parent) | Out-Null
+    $list = @(Read-Lines $InstallsFile | Where-Object { $_ -and (Test-Path -LiteralPath $_) })
+    if ($list -notcontains $game) { $list += $game }
+    Write-Utf8 $InstallsFile (($list -join "`r`n") + "`r`n")
+}
+
 $work = Join-Path $env:TEMP ("homestead-school-" + [guid]::NewGuid().ToString('N').Substring(0, 8))
 New-Item -ItemType Directory -Path $work | Out-Null
 
@@ -53,6 +183,44 @@ try {
     Write-Host ""
     Write-Host "  Homestead School installer" -ForegroundColor Green
     Write-Host ""
+
+    # --- 0. Alleen wisselen van modus (geen download) ---------------------------
+    if ($SetMode) {
+        $games = @(Read-Lines $InstallsFile | Where-Object { $_ -and (Test-Path -LiteralPath (Join-Path $_ '.homestead')) })
+        if ($InstancePath) { $games = @($InstancePath.Trim('"', ' ')) }
+        if ($games.Count -eq 0) {
+            Write-Warn "Homestead School is nog niet geinstalleerd. Dubbelklik eerst op Installeren.cmd."
+            Stop-WithPause 1
+        }
+        $game = $games[0]
+        if ($games.Count -gt 1) {
+            Write-Host "Welke installatie?"
+            for ($i = 0; $i -lt $games.Count; $i++) { Write-Host ("  [{0}] {1}  ({2})" -f ($i + 1), $games[$i], (Get-CurrentMode $games[$i])) }
+            do { $c = Read-Host "Kies een nummer" } while (-not ($c -as [int]) -or [int]$c -lt 1 -or [int]$c -gt $games.Count)
+            $game = $games[[int]$c - 1]
+        }
+        if (Get-Process -Name javaw -ErrorAction SilentlyContinue) {
+            Write-Warn "Sluit Minecraft eerst af."
+            Read-Host "Druk op Enter als Minecraft dicht is" | Out-Null
+        }
+        $cur = Get-CurrentMode $game
+        if ($cur -eq $SetMode) {
+            Write-Host "Performance-modus staat al $(if ($SetMode -eq 'performance') { 'AAN' } else { 'UIT' }) in $game." -ForegroundColor Green
+            Stop-WithPause 0
+        }
+        if ($SetMode -eq 'performance') {
+            Write-Step "Performance-modus aanzetten in $game ..."
+            Apply-PerfMods $game; Apply-PerfOptions $game
+        } else {
+            Write-Step "Terug naar normale modus in $game ..."
+            Restore-PerfMods $game; Restore-Options $game
+            Write-Host "    Alle mods en je eigen instellingen staan terug."
+        }
+        Set-ModeMarker $game $SetMode
+        Write-Host ""
+        Write-Host "Klaar! Start Homestead School opnieuw in je launcher." -ForegroundColor Green
+        Stop-WithPause 0
+    }
 
     # --- 1. Repo ophalen (mods, KubeJS-bestanden, pack.json) ------------------
     if ($SourceDir) {
@@ -152,6 +320,20 @@ try {
     New-Item -ItemType Directory -Force -Path $GameDir | Out-Null
     Write-Step "Installeren in: $GameDir"
 
+    # Modus kiezen (onthoudt de vorige keuze)
+    $PrevMode = Get-CurrentMode $GameDir
+    if (-not $Mode) {
+        $def = if ($PrevMode -eq 'performance') { '2' } else { '1' }
+        Write-Host ""
+        Write-Host "Welke versie wil je?"
+        Write-Host "  [1] Normaal       - alle effecten, voor een goede pc"
+        Write-Host "  [2] Performance   - meer FPS, voor laptops (minder sfeer-effecten, lichtere instellingen)"
+        Write-Host "  (Later wisselen kan met 'Performance aan.cmd' / 'Performance uit.cmd')"
+        $c = Read-Host "Kies 1 of 2 [Enter = $def]"
+        if (-not $c) { $c = $def }
+        $Mode = if ($c -eq '2') { 'performance' } else { 'normal' }
+    }
+
     # --- 3. Launcher instellen ------------------------------------------------
     if ($Launcher -eq 'official') {
         Write-Step "Fabric $($Pack.fabricLoader) voor Minecraft $($Pack.minecraft) instellen..."
@@ -237,6 +419,20 @@ try {
     }
 
     # --- 5. Mods synchroniseren ----------------------------------------------
+    # Eerst performance-wijzigingen aan de mods terugdraaien, dan synchroniseren, daarna de modus opnieuw toepassen.
+    if ($PrevMode -eq 'performance') { Restore-PerfMods $GameDir }
+    $state = Get-StateDir $GameDir
+    $perfSrc = Join-Path $RepoRoot 'performance'
+    if (Test-Path -LiteralPath $perfSrc) {
+        New-Item -ItemType Directory -Force -Path $state | Out-Null
+        Copy-Item -LiteralPath (Join-Path $perfSrc 'remove.txt') -Destination (Join-Path $state 'remove.txt') -Force
+        Copy-Item -LiteralPath (Join-Path $perfSrc 'options.txt') -Destination (Join-Path $state 'perf-options.txt') -Force
+        $pm = Join-Path $state 'perf-mods'
+        if (Test-Path -LiteralPath $pm) { Remove-Item -LiteralPath $pm -Recurse -Force }
+        New-Item -ItemType Directory -Force -Path $pm | Out-Null
+        Get-ChildItem -LiteralPath (Join-Path $perfSrc 'mods') -Filter *.jar | Copy-Item -Destination $pm -Force
+    }
+
     Write-Step "Mods synchroniseren..."
     $SrcDir  = Join-Path $RepoRoot 'mods'
     $ModsDir = Join-Path $GameDir 'mods'
@@ -277,6 +473,18 @@ try {
         }
     }
 
+    # --- 6b. Modus toepassen --------------------------------------------------
+    if ($Mode -eq 'performance') {
+        Write-Step "Performance-modus toepassen..."
+        Apply-PerfMods $GameDir
+        if ($PrevMode -ne 'performance') { Apply-PerfOptions $GameDir }   # eigen bijregelingen niet elke update overschrijven
+    } elseif ($PrevMode -eq 'performance') {
+        Write-Step "Terug naar normale modus..."
+        Restore-Options $GameDir
+    }
+    Set-ModeMarker $GameDir $Mode
+    Register-Install $GameDir
+
     # --- 7. Server in de serverlijst -----------------------------------------
     $serversDat = Join-Path $GameDir 'servers.dat'
     if (-not (Test-Path -LiteralPath $serversDat)) {
@@ -302,6 +510,8 @@ try {
     Write-Host "Klaar!" -ForegroundColor Green
     Write-Host "  Mods: $($src.Count)  (nieuw $added, bijgewerkt $updated, ongewijzigd $same, weggehaald $removed)"
     if ($removed + $updated -gt 0) { Write-Host "  Oude mods staan in: $backupDir" }
+    if ($Mode -eq 'performance') { Write-Host "  Modus: PERFORMANCE (uitzetten: 'Performance uit.cmd')" }
+    else { Write-Host "  Modus: normaal (laptop? 'Performance aan.cmd')" }
     switch ($Launcher) {
         'official' { Write-Host "  Open de Minecraft Launcher, kies het profiel 'Homestead School' en druk op Spelen." }
         'prism'    { Write-Host "  Open Prism Launcher en start de instance 'Homestead School'." }

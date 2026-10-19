@@ -9,6 +9,8 @@ $root = Split-Path $PSScriptRoot -Parent
 $out  = Join-Path $root 'HomesteadSchool-Installer.zip'
 $files = @(
     @{ Src = Join-Path $root 'installer\Installeren.cmd'; Name = 'HomesteadSchool-Installer/Installeren.cmd' },
+    @{ Src = Join-Path $root 'installer\Performance aan.cmd'; Name = 'HomesteadSchool-Installer/Performance aan.cmd' },
+    @{ Src = Join-Path $root 'installer\Performance uit.cmd'; Name = 'HomesteadSchool-Installer/Performance uit.cmd' },
     @{ Src = Join-Path $root 'install.ps1';               Name = 'HomesteadSchool-Installer/install.ps1' },
     @{ Src = Join-Path $root 'installer\LEESMIJ.txt';     Name = 'HomesteadSchool-Installer/LEESMIJ.txt' }
 )
