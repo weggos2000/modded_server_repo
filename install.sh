@@ -5,10 +5,10 @@
 # Mods die niet meer in de repo staan gaan naar mods-backup/<datum>/ (niets wordt gewist).
 #
 # Gebruik:
-#   curl -fsSL https://raw.githubusercontent.com/OWNER/REPO/main/install.sh | bash -s -- "/pad/naar/instance"
+#   curl -fsSL https://raw.githubusercontent.com/weggos2000/modded_server_repo/main/install.sh | bash -s -- "/pad/naar/instance"
 set -euo pipefail
 
-REPO="OWNER/REPO"
+REPO="weggos2000/modded_server_repo"
 BRANCH="main"
 
 INSTANCE="${1:-}"

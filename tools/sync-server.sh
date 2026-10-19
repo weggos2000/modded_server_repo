@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # Zet de mods van de AMP-server gelijk aan deze repo (zonder de client-only mods).
 # Draai op de AMP-server als gebruiker "amp", met de Minecraft-server GESTOPT:
-#   curl -fsSL https://raw.githubusercontent.com/OWNER/REPO/main/tools/sync-server.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/weggos2000/modded_server_repo/main/tools/sync-server.sh | bash
 # Weggehaalde/oude jars gaan naar mods-backup/<datum>/ in de instance.
 set -euo pipefail
 
-REPO="OWNER/REPO"
+REPO="weggos2000/modded_server_repo"
 BRANCH="main"
 INSTANCE="${1:-$HOME/.ampdata/instances/HomesteadSchool01/Minecraft}"
 MODS="$INSTANCE/mods"

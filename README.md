@@ -27,20 +27,20 @@ Sluit Minecraft eerst af. Doe dit ook telkens als er gezegd wordt dat de mods ve
 Druk op **Win + R**, plak dit en druk op Enter (of plak het in PowerShell):
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -Command "& ([scriptblock]::Create((irm 'https://raw.githubusercontent.com/OWNER/REPO/main/install.ps1')))"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "& ([scriptblock]::Create((irm 'https://raw.githubusercontent.com/weggos2000/modded_server_repo/main/install.ps1')))"
 ```
 
 Het script zoekt zelf je Homestead-instance in CurseForge, Prism en Modrinth. Vindt het er geen,
 dan vraagt het om het pad. Je kunt het pad ook zelf meegeven:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -Command "& ([scriptblock]::Create((irm 'https://raw.githubusercontent.com/OWNER/REPO/main/install.ps1'))) -InstancePath 'C:\Users\JIJ\curseforge\minecraft\Instances\Homestead - A Cozy Survival Experience'"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "& ([scriptblock]::Create((irm 'https://raw.githubusercontent.com/weggos2000/modded_server_repo/main/install.ps1'))) -InstancePath 'C:\Users\JIJ\curseforge\minecraft\Instances\Homestead - A Cozy Survival Experience'"
 ```
 
 ### macOS / Linux
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/OWNER/REPO/main/install.sh | bash -s -- "/pad/naar/je/instance"
+curl -fsSL https://raw.githubusercontent.com/weggos2000/modded_server_repo/main/install.sh | bash -s -- "/pad/naar/je/instance"
 ```
 
 ### Wat doet het script?
@@ -61,7 +61,7 @@ curl -fsSL https://raw.githubusercontent.com/OWNER/REPO/main/install.sh | bash -
 4. Commit en push.
 5. Server: stop Homestead School in AMP en draai op de server als `amp`:
    ```bash
-   curl -fsSL https://raw.githubusercontent.com/OWNER/REPO/main/tools/sync-server.sh | bash
+   curl -fsSL https://raw.githubusercontent.com/weggos2000/modded_server_repo/main/tools/sync-server.sh | bash
    ```
    Daarna de server opnieuw starten. Laat iedereen ook het sync-command opnieuw draaien.
 

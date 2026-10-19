@@ -7,7 +7,7 @@
   Er wordt dus nooit iets definitief verwijderd.
 
   Gebruik (zie README):
-    powershell -NoProfile -ExecutionPolicy Bypass -Command "& ([scriptblock]::Create((irm 'https://raw.githubusercontent.com/OWNER/REPO/main/install.ps1')))"
+    powershell -NoProfile -ExecutionPolicy Bypass -Command "& ([scriptblock]::Create((irm 'https://raw.githubusercontent.com/weggos2000/modded_server_repo/main/install.ps1')))"
 
   Optioneel zelf het pad opgeven:
     ... -Command "& ([scriptblock]::Create((irm '<url>'))) -InstancePath 'C:\pad\naar\instance'"
@@ -21,7 +21,7 @@ $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'   # maakt downloaden in PowerShell 5.1 veel sneller
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
-$Repo   = 'OWNER/REPO'
+$Repo   = 'weggos2000/modded_server_repo'
 $Branch = 'main'
 
 function Write-Step($msg) { Write-Host "==> $msg" -ForegroundColor Cyan }
