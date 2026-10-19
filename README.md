@@ -8,8 +8,7 @@ exact gelijk aan die van de server, ook als we later mods toevoegen of weghalen.
 | **Server** | `jakarta-tvs.tun.ply.gg` |
 | **Modpack** | Homestead – A Cozy Survival Experience **1.3.7** (Fabric, Minecraft 1.20.1) |
 | **Voice chat** | Simple Voice Chat, werkt automatisch (toets **V** voor het menu) |
-| **Shops** | Spud's Shops |
-| **Geld** | Create: Numismatics (munten, bank, vendors) |
+| **Geld & shops** | Create: Numismatics: munten, bank en **Vendors** (je eigen winkel) |
 
 ## Installeren (eerste keer)
 
@@ -93,7 +92,7 @@ De recepten staan in `server/kubejs/server_scripts/numismatics_crafting.js` en d
 ## Modlijst
 
 <!-- MODLIST:START -->
-**375 mods** (67 daarvan alleen voor de client).
+**374 mods** (67 daarvan alleen voor de client).
 
 | Mod | Versie | Bestand | Alleen client |
 |---|---|---|---|
@@ -408,7 +407,6 @@ De recepten staan in `server/kubejs/server_scripts/numismatics_crafting.js` en d
 | SparseStructures | 3.0 | `sparsestructures-fabric-1.20.1-3.0.jar` |  |
 | Spawn | 1.0.3-fabric | `spawn-1.0.3-fabric.jar` |  |
 | Spelunkery | 1.20.1-0.3.16 | `spelunkery-1.20.1-0.3.16-fabric.jar` |  |
-| Spud's Shops | 1.9.0 | `spuds-shops-1.20.1-1.9.0.jar` |  |
 | Squish | 0.3-1.20.1 | `squish-0.3-1.20.1.jar` |  |
 | Stack Refill | 4.9 | `stackrefill-1.20.1-4.9.jar` |  |
 | StackDeobfuscator | 1.4.3+08e71cc | `StackDeobfuscatorFabric-1.4.3+08e71cc.jar` |  |
