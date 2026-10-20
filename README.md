@@ -6,6 +6,7 @@ exact gelijk aan de server, ook als we later mods toevoegen of weghalen.
 | | |
 |---|---|
 | **Server** | `jakarta-tvs.tun.ply.gg` |
+| **Wereldkaart** | [ampserver.tail7ba323.ts.net](https://ampserver.tail7ba323.ts.net), live 3D-kaart (BlueMap) |
 | **Modpack** | Homestead – A Cozy Survival Experience **1.3.7** (Fabric, Minecraft 1.20.1) |
 | **Voice chat** | Simple Voice Chat, werkt automatisch (toets **V** voor het menu) |
 | **Geld & shops** | Create: Numismatics: munten, bank en **Vendors** (je eigen winkel) |
