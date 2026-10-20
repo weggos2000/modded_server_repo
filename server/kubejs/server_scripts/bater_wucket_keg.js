@@ -16,10 +16,10 @@ BlockEvents.rightClicked('alcocraftplus:keg', event => {
     keg.waterLevel += 10
     keg.setChanged()
 
-    const level = event.level
-    const pos = event.block.pos
-    level.playSound(null, pos, 'minecraft:item.bucket.empty', 'blocks', 1.0, 1.0)
-    level.sendBlockUpdated(pos, event.block.blockState, event.block.blockState, 3)
+    const b = event.block
+    // geluid via commando: level.playSound() is dubbelzinnig (meerdere Java-overloads) voor KubeJS
+    event.server.runCommandSilent(`execute in ${event.level.dimension} run playsound minecraft:item.bucket.empty block @a ${b.x + 0.5} ${b.y + 0.5} ${b.z + 0.5}`)
+    event.level.sendBlockUpdated(b.pos, b.blockState, b.blockState, 3)
 
     event.cancel()
 })
