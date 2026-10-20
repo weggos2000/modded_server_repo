@@ -108,7 +108,7 @@ herstelt het script alleen de bestaande lijst. Weghalen kan wel gewoon met `whit
 ## Modlijst
 
 <!-- MODLIST:START -->
-**374 mods** (67 daarvan alleen voor de client).
+**377 mods** (67 daarvan alleen voor de client).
 
 | Mod | Versie | Bestand | Alleen client |
 |---|---|---|---|
@@ -171,8 +171,8 @@ herstelt het script alleen de bestaande lijst. Weghalen kan wel gewoon met `whit
 | Common Network | 1.0.5-1.20.1 | `common-networking-fabric-1.0.5-1.20.1.jar` |  |
 | Concurrent Chunk Management Engine | 0.2.0+alpha.11.16 | `c2me-fabric-mc1.20.1-0.2.0+alpha.11.16.jar` |  |
 | Configurable | 2.2.3 | `Configurable-2.2.3-fabric-yarn+1.20.1.jar` |  |
-| Configured | 2.2.3 | `configured-fabric-1.20.1-2.2.3.jar` | ja |
 | Configured | 1.3.1 | `Configurable-mc1.20.1-v1.3.1.jar` |  |
+| Configured | 2.2.3 | `configured-fabric-1.20.1-2.2.3.jar` | ja |
 | Connectible Chains | 2.5.5+1.20.1 | `connectiblechains-2.5.5+1.20.1.jar` |  |
 | Construction Wand (Fabric) | 2.1.2 | `constructionwand-2.1.2+1.20.1.jar` |  |
 | Continuity | 3.0.0+1.20.1 | `continuity-3.0.0+1.20.1.jar` | ja |
@@ -219,6 +219,7 @@ herstelt het script alleen de bestaande lijst. Weghalen kan wel gewoon met `whit
 | Eldritch End | 0.3.4 | `Eldritch_End-FABRIC-MC1.20.1-0.3.4.jar` |  |
 | Elytra Slot | 6.4.4+1.20.1 | `elytraslot-fabric-6.4.4+1.20.1.jar` |  |
 | Emojiful | 4.2.0 | `Emojiful-Fabric-1.20.1-4.2.0.jar` |  |
+| Emotecraft | 2.2.7-b.build.50 | `emotecraft-for-MC1.20.1-2.2.7-b.build.50-fabric.jar` |  |
 | Enchanter Fix | 1.8 | `enchanter_fix-1.8+mc1.20-1.21.11.jar` |  |
 | EnchantmentDescriptions | 17.1.21 | `EnchantmentDescriptions-Fabric-1.20.1-17.1.21.jar` | ja |
 | End's Delight | refabricated-1.20.1-2.5 | `ends_delight-refabricated-1.20.1-2.5.jar` |  |
@@ -284,6 +285,7 @@ herstelt het script alleen de bestaande lijst. Weghalen kan wel gewoon met `whit
 | Jade | 11.13.1+fabric | `Jade-1.20-Fabric-11.13.1.jar` |  |
 | Jade Addons | 5.5.1+fabric | `JadeAddons-1.20.1-Fabric-5.5.1.jar` |  |
 | JamLib | 1.3.6+1.20.1 | `jamlib-fabric-1.3.6+1.20.1.jar` |  |
+| Joy of Painting | fabric-1.20.1-2.0.0 | `xercapaint-fabric-1.20.1-2.0.0.jar` |  |
 | Jump Over Fences | 1.3.1 | `jumpoverfences-fabric-1.20.1-1.3.1.jar` | ja |
 | Just Enough Breeding | 3.0.0 | `justenoughbreeding-fabric-1.20.1-3.0.0.jar` |  |
 | Just Enough Items | 15.20.0.130 | `jei-1.20.1-fabric-15.20.0.130.jar` |  |
@@ -468,6 +470,7 @@ herstelt het script alleen de bestaande lijst. Weghalen kan wel gewoon met `whit
 | Villagers Plus | 3.1 | `VillagersPlus_3.1_(FABRIC)_for_1.20.1.jar` |  |
 | Villages & Pillages | 1.0.2 | `villagesandpillages-fabric-mc1.20.1-1.0.2.jar` |  |
 | Visuality | 0.7.1+1.20 | `visuality-0.7.1+1.20.jar` | ja |
+| Waystones | 14.1.21 | `waystones-fabric-1.20.1-14.1.21.jar` |  |
 | Wearable lanterns | 1.0.1 | `trinketlantern-1.0.1.jar` |  |
 | Welcome Screen | 1.0.0 | `welcomescreen-fabric-1.0.0-1.20.1.jar` | ja |
 | What Are They Up To | 1.20.1-1.2.3 | `watut-fabric-1.20.1-1.2.3.jar` |  |
