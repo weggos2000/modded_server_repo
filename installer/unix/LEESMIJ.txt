@@ -1,0 +1,32 @@
+Homestead School installer (Linux en macOS)
+===========================================
+
+Snelste manier: open een terminal en plak
+
+    curl -fsSL https://raw.githubusercontent.com/weggos2000/modded_server_repo/main/install.sh | bash
+
+Of met deze map:
+
+1. Sluit Minecraft en je launcher.
+2. Start de installer:
+   - macOS: dubbelklik op "Installeren.command".
+     Zegt macOS dat het niet geopend kan worden? Rechtsklik > Open > Open.
+     (Of: Systeeminstellingen > Privacy en beveiliging > "Toch openen".)
+   - Linux: dubbelklik op "Installeren.sh" en kies "Uitvoeren in terminal",
+     of open een terminal in deze map en typ:  bash Installeren.sh
+3. Kies je launcher (1 = gewone Minecraft Launcher, 2 = Prism, 3 = andere, 4 = Lunar).
+4. Wacht tot er "Klaar!" staat. De eerste keer duurt dat even (ca. 700 MB).
+5. Start "Homestead School" in je launcher. De server staat al in je Multiplayer-lijst.
+
+Nodig: Python 3 (staat op bijna elke Linux; op macOS vraagt het systeem zelf om het te installeren).
+
+Updaten: gewoon de installer opnieuw starten.
+
+Laptop of trage computer? Kies bij het installeren "Performance", of start later
+"Performance aan" (meer FPS, minder effecten). "Performance uit" zet alles terug.
+
+Kan je niet joinen ("You are not white-listed")? Vraag de beheerder om je Minecraft-naam toe te voegen
+(exact zoals je hem typt, hoofdletters tellen mee).
+Skin instellen: typ in het spel /skin set <naam van een speler met de skin die je wil>.
+
+Meer info: https://github.com/weggos2000/modded_server_repo

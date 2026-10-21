@@ -57,14 +57,39 @@ Wisselen kan altijd, zonder opnieuw te downloaden: sluit Minecraft en dubbelklik
 
 De gewone launcher installeert alles in `%APPDATA%\.homestead-school`, los van je normale Minecraft.
 
-### macOS / Linux
+## Installeren en updaten (Linux en macOS)
 
-Hier synct het script alleen de mods. Installeer eerst Homestead 1.3.7 via Prism of de CurseForge-app,
-en draai daarna:
+Dezelfde installer als op Windows: launcher kiezen (gewone launcher, Prism, andere, Lunar), normaal of
+performance, Homestead-pack, mods, serverlijst. Nodig: **Python 3** (staat op bijna elke Linux; op macOS
+vraagt het systeem zelf om het te installeren).
+
+**Sluit Minecraft en je launcher**, open een terminal en plak:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/weggos2000/modded_server_repo/main/install.sh | bash -s -- "/pad/naar/je/instance"
+curl -fsSL https://raw.githubusercontent.com/weggos2000/modded_server_repo/main/install.sh | bash
 ```
+
+Liever dubbelklikken? Download
+**[HomesteadSchool-Installer-Linux-Mac.tar.gz](https://github.com/weggos2000/modded_server_repo/raw/main/HomesteadSchool-Installer-Linux-Mac.tar.gz)**,
+pak uit en start **Installeren.command** (macOS: rechtsklik → *Open* de eerste keer) of
+**Installeren.sh** (Linux: *Uitvoeren in terminal*). Daar staan ook **Performance aan/uit** bij.
+
+Performance-modus wisselen vanuit de terminal (zonder opnieuw te downloaden):
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/weggos2000/modded_server_repo/main/install.sh | bash -s -- --set-mode performance
+```
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/weggos2000/modded_server_repo/main/install.sh | bash -s -- --set-mode normal
+```
+
+Waar komt alles terecht?
+
+| Launcher | Linux | macOS |
+|---|---|---|
+| Gewone launcher | `~/.homestead-school` | `~/Library/Application Support/homestead-school` |
+| Prism | `~/.local/share/PrismLauncher/instances/Homestead School` (ook Flatpak) | `~/Library/Application Support/PrismLauncher/instances/Homestead School` |
 
 ## Voor de beheerder: spelers toevoegen
 
