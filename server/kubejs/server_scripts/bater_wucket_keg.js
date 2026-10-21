@@ -2,7 +2,7 @@
 // De keg accepteert hardgecodeerd alleen een gewone emmer water. Dit doet hetzelfde als die emmer
 // (+10 water, alleen als de keg op 30 of minder staat en er geen bier in zit), maar de Bater Wucket blijft vol.
 BlockEvents.rightClicked('alcocraftplus:keg', event => {
-    if (event.item.id !== 'things:bater_wucket') return
+    if (String(event.item.id) !== 'things:bater_wucket') return   // id is een Java-string
 
     const keg = event.block.entity
     if (!keg) return

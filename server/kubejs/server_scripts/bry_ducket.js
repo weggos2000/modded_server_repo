@@ -5,35 +5,56 @@
 //  - AlcoCraft+-keg   -> -10 water (alleen zonder bier erin)
 // Het item zelf wordt geregistreerd in startup_scripts/bry_ducket.js (client + server).
 
+// Let op: KubeJS op deze server remapt Minecraft-methodes naar yarn-namen, niet naar Mojang-namen
+// (getYRot bestaat hier niet). Daarom vooral KubeJS' eigen functies: rayTrace, getBlock, properties, set, swing.
 const BRY_REACH = 5
 
 function bryPlaySound(event, b, sound) {
     event.server.runCommandSilent(`execute in ${event.level.dimension} run playsound ${sound} block @a ${b.x + 0.5} ${b.y + 0.5} ${b.z + 0.5}`)
 }
 
+function bryProp(b, key) {
+    const v = b.properties.get(key)
+    return v == null ? '' : String(v)
+}
+
+// b.id is een Java-string: eerst String() ervan maken, anders is === altijd false
+function bryCheck(b) {
+    const id = String(b.id)
+    if (id === 'minecraft:water') return bryProp(b, 'level') === '0' ? 'source' : 'flowing'
+    if (bryProp(b, 'waterlogged') === 'true') return 'waterlogged'
+    if (id === 'minecraft:water_cauldron') return 'cauldron'
+    return null
+}
+
 // Eerste blok in de kijkrichting met water dat we weg kunnen halen. Gaat door lucht, gras en stromend water
-// (zoals een emmer), stopt bij het eerste vaste blok.
+// (zoals een emmer) tot het eerste vaste blok dat rayTrace zonder water raakt.
 function bryFindWater(player, level) {
-    const eye = player.getEyePosition()
-    const look = player.getLookAngle()
+    // meestal raakt de straal mét water meteen de bron
+    const wray = player.rayTrace(BRY_REACH, true)
+    if (wray && wray.block) {
+        const kind = bryCheck(wray.block)
+        if (kind && kind !== 'flowing') return { block: wray.block, kind: kind }
+    }
+    // stromend water ervoor? Dan stap voor stap verder kijken tot het eerste vaste blok
+    const ray = player.rayTrace(BRY_REACH, false)
+    if (!ray || ray.hit == null) return null
+    const ex = player.x, ey = player.y + 1.62, ez = player.z   // ooghoogte van een staande speler
+    const tx = ray.hitX, ty = ray.hitY, tz = ray.hitZ
+    const len = Math.sqrt((tx - ex) ** 2 + (ty - ey) ** 2 + (tz - ez) ** 2)
+    if (!(len > 0)) return null
     let last = ''
-    for (let d = 0; d <= BRY_REACH; d += 0.1) {
-        const x = Math.floor(eye.x() + look.x() * d)
-        const y = Math.floor(eye.y() + look.y() * d)
-        const z = Math.floor(eye.z() + look.z() * d)
+    for (let d = 0; d <= len + 0.05; d += 0.1) {
+        const t = Math.min(d, len + 0.05) / len
+        const x = Math.floor(ex + (tx - ex) * t)
+        const y = Math.floor(ey + (ty - ey) * t)
+        const z = Math.floor(ez + (tz - ez) * t)
         const key = `${x},${y},${z}`
         if (key === last) continue
         last = key
-
         const b = level.getBlock(x, y, z)
-        const props = b.properties
-        if (b.id === 'minecraft:water') {
-            if (String(props.level) === '0') return { block: b, kind: 'source' }
-            continue   // stromend water: erdoor kijken
-        }
-        if (String(props.waterlogged) === 'true') return { block: b, kind: 'waterlogged' }
-        if (b.id === 'minecraft:water_cauldron') return { block: b, kind: 'cauldron' }
-        if (!b.blockState.getCollisionShape(level, b.pos).isEmpty()) return null
+        const kind = bryCheck(b)
+        if (kind && kind !== 'flowing') return { block: b, kind: kind }
     }
     return null
 }
@@ -48,20 +69,20 @@ ItemEvents.rightClicked('kubejs:bry_ducket', event => {
         b.set('minecraft:air')
     } else if (hit.kind === 'waterlogged') {
         const props = {}
-        Object.keys(b.properties).forEach(k => { props[k] = String(b.properties[k]) })
+        b.properties.forEach((k, v) => { props[String(k)] = String(v) })
         props.waterlogged = 'false'
-        b.set(b.id, props)
+        b.set(String(b.id), props)
     } else {
         b.set('minecraft:cauldron')
     }
     bryPlaySound(event, b, 'minecraft:item.bucket.fill')
-    player.swing(event.hand, true)
+    player.swing(event.hand)
     event.cancel()
 })
 
 // De keg opent anders zijn GUI, dus die apart (zelfde aanpak als bater_wucket_keg.js)
 BlockEvents.rightClicked('alcocraftplus:keg', event => {
-    if (event.item.id !== 'kubejs:bry_ducket') return
+    if (String(event.item.id) !== 'kubejs:bry_ducket') return   // id is een Java-string
 
     const keg = event.block.entity
     if (!keg) return
