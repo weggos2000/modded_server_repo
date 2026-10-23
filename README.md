@@ -133,7 +133,7 @@ herstelt het script alleen de bestaande lijst. Weghalen kan wel gewoon met `whit
 ## Modlijst
 
 <!-- MODLIST:START -->
-**385 mods** (67 daarvan alleen voor de client).
+**386 mods** (67 daarvan alleen voor de client).
 
 | Mod | Versie | Bestand | Alleen client |
 |---|---|---|---|
@@ -507,6 +507,7 @@ herstelt het script alleen de bestaande lijst. Weghalen kan wel gewoon met `whit
 | Waystones | 14.1.21 | `waystones-fabric-1.20.1-14.1.21.jar` |  |
 | Wearable lanterns | 1.0.1 | `trinketlantern-1.0.1.jar` |  |
 | Welcome Screen | 1.0.0 | `welcomescreen-fabric-1.0.0-1.20.1.jar` | ja |
+| What Are They Up To | 1.20.1-1.2.3 | `watut-fabric-1.20.1-1.2.3.jar` |  |
 | Wireless Redstone | 1.20.1-1.1.2 | `wirelessredstone-fabric-1.20.1-1.1.2.jar` |  |
 | Xaero's Minimap | 26.5.0 | `xaerominimap-fabric-1.20.1-26.5.0.jar` |  |
 | Xaero's World Map | 1.46.0 | `xaeroworldmap-fabric-1.20.1-1.46.0.jar` |  |
