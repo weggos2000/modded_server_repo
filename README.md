@@ -36,9 +36,9 @@ Je hebt Minecraft Java 1.20.1 nodig. Verder niets.
 
 ### Performance-modus (laptops)
 
-Bij het installeren kies je **Normaal** of **Performance**. Performance zet 14 zware sfeer-mods uit
-(geluiden, deeltjes, animaties, 3D-skins, …), voegt FPS-mods toe (Dynamic FPS, BadOptimizations) en zet
-lichtere instellingen (render distance 8, graphics Fast, minder deeltjes). Je speelt gewoon op dezelfde server.
+Bij het installeren kies je **Normaal** of **Performance**. Performance zet 15 zware sfeer-mods uit
+(geluiden, Sound Physics, deeltjes, animaties, 3D-skins, …), voegt FPS-mods toe (Dynamic FPS, BadOptimizations),
+zet shaders uit en zet lichtere instellingen (render distance 8, graphics Fast, minder deeltjes). Je speelt gewoon op dezelfde server.
 
 Wisselen kan altijd, zonder opnieuw te downloaden: sluit Minecraft en dubbelklik op
 **Performance aan.cmd** of **Performance uit.cmd**. Bij *uit* komen alle mods en je eigen instellingen terug.

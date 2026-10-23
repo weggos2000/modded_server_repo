@@ -41,7 +41,7 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
 
 $Repo   = 'weggos2000/modded_server_repo'
 $Branch = 'main'
-$InstallerVersion = 4   # verhogen bij elke wijziging aan dit script (ook in pack.json zetten)
+$InstallerVersion = 5   # verhogen bij elke wijziging aan dit script (ook in pack.json zetten)
 
 function Write-Step($msg) { Write-Host "==> $msg" -ForegroundColor Cyan }
 function Write-Warn($msg) { Write-Host "    $msg" -ForegroundColor Yellow }
@@ -61,6 +61,7 @@ function Stop-WithPause($code) {
 #   perf-options.txt       lichtere grafische instellingen
 #   disabled-mods\         hier staan de weggehaalde mods tijdens performance-modus
 #   options-backup-*.txt   jouw eigen instellingen, om terug te zetten bij normaal
+#   iris-backup.txt        jouw shaders aan/uit, om terug te zetten bij normaal
 function Get-StateDir($game) { Join-Path $game '.homestead' }
 
 function Get-CurrentMode($game) {
@@ -144,6 +145,36 @@ function Apply-PerfOptions($game) {
         if (-not (Test-Path -LiteralPath $backup)) { Write-Utf8 $backup (($orig -join "`n") + "`n") }
         Write-Utf8 $o.File (($lines -join "`n") + "`n")
     }
+    Set-ShadersOff $game
+}
+
+function Get-IrisFile($game) { Join-Path $game 'config\iris.properties' }
+
+function Set-IrisShaders($path, $value) {
+    $lines = @(Read-Lines $path | Where-Object { -not $_.StartsWith('enableShaders=') }) + "enableShaders=$value"
+    Write-Utf8 $path (($lines -join "`n") + "`n")
+}
+
+function Set-ShadersOff($game) {
+    # shaders uit; de eigen keuze bewaren in iris-backup.txt (alleen als er nog geen backup is)
+    $path = Get-IrisFile $game
+    $backup = Join-Path (Get-StateDir $game) 'iris-backup.txt'
+    if (-not (Test-Path -LiteralPath $path)) { return }   # nog nooit gestart: YOSBR zet de standaard (shaders uit) zelf neer
+    $cur = 'false'
+    foreach ($l in (Read-Lines $path)) { if ($l.StartsWith('enableShaders=')) { $cur = $l.Substring(14).Trim() } }
+    if (-not (Test-Path -LiteralPath $backup)) { Write-Utf8 $backup "$cur`n" }
+    Set-IrisShaders $path 'false'
+}
+
+function Restore-Shaders($game) {
+    $path = Get-IrisFile $game
+    $backup = Join-Path (Get-StateDir $game) 'iris-backup.txt'
+    if (-not (Test-Path -LiteralPath $backup)) { return }
+    if (Test-Path -LiteralPath $path) {
+        $v = @(Read-Lines $backup)
+        Set-IrisShaders $path $(if ($v.Count -gt 0) { $v[0].Trim() } else { 'false' })
+    }
+    Remove-Item -LiteralPath $backup -Force
 }
 
 function Restore-Options($game) {
@@ -167,6 +198,7 @@ function Restore-Options($game) {
         Write-Utf8 $o.File (($lines -join "`n") + "`n")
         if ($delete) { Remove-Item -LiteralPath $backup -Force }
     }
+    Restore-Shaders $game
 }
 
 function Register-Install($game) {

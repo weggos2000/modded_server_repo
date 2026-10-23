@@ -35,7 +35,7 @@ import zlib
 
 REPO = 'weggos2000/modded_server_repo'
 BRANCH = 'main'
-INSTALLER_VERSION = 4   # verhogen bij elke wijziging aan de installers (ook in pack.json zetten)
+INSTALLER_VERSION = 5   # verhogen bij elke wijziging aan de installers (ook in pack.json zetten)
 UA = 'homestead-school-installer'
 
 IS_MAC = platform.system() == 'Darwin'
@@ -228,6 +228,7 @@ class Source:
 #   perf-options.txt       lichtere grafische instellingen
 #   disabled-mods/         hier staan de weggehaalde mods tijdens performance-modus
 #   options-backup-*.txt   jouw eigen instellingen, om terug te zetten bij normaal
+#   iris-backup.txt        jouw shaders aan/uit, om terug te zetten bij normaal
 def state_dir(game): return os.path.join(game, '.homestead')
 
 
@@ -305,6 +306,35 @@ def apply_perf_options(game):
         if not os.path.exists(backup):
             write_text(backup, '\n'.join(orig) + '\n')
         write_text(path, '\n'.join(lines) + '\n')
+    shaders_off(game)
+
+
+def iris_file(game): return os.path.join(game, 'config', 'iris.properties')
+
+
+def set_iris_shaders(path, value):
+    lines = [l for l in read_lines(path) if not l.startswith('enableShaders=')]
+    write_text(path, '\n'.join(lines + [f'enableShaders={value}']) + '\n')
+
+
+def shaders_off(game):
+    # shaders uit; de eigen keuze bewaren in iris-backup.txt (alleen als er nog geen backup is)
+    path, backup = iris_file(game), os.path.join(state_dir(game), 'iris-backup.txt')
+    if not os.path.isfile(path):
+        return   # nog nooit gestart: YOSBR zet de standaard (shaders uit) zelf neer
+    cur = next((l.split('=', 1)[1] for l in read_lines(path) if l.startswith('enableShaders=')), 'false')
+    if not os.path.exists(backup):
+        write_text(backup, cur.strip() + '\n')
+    set_iris_shaders(path, 'false')
+
+
+def restore_shaders(game):
+    path, backup = iris_file(game), os.path.join(state_dir(game), 'iris-backup.txt')
+    if not os.path.exists(backup):
+        return
+    if os.path.isfile(path):
+        set_iris_shaders(path, (read_lines(backup) or ['false'])[0].strip())
+    os.remove(backup)
 
 
 def restore_options(game):
@@ -328,6 +358,7 @@ def restore_options(game):
         write_text(path, '\n'.join(lines) + '\n')
         if delete:
             os.remove(backup)
+    restore_shaders(game)
 
 
 def register_install(installs_file, game):
