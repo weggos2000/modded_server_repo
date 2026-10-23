@@ -133,7 +133,7 @@ herstelt het script alleen de bestaande lijst. Weghalen kan wel gewoon met `whit
 ## Modlijst
 
 <!-- MODLIST:START -->
-**386 mods** (67 daarvan alleen voor de client).
+**387 mods** (67 daarvan alleen voor de client).
 
 | Mod | Versie | Bestand | Alleen client |
 |---|---|---|---|
@@ -163,6 +163,7 @@ herstelt het script alleen de bestaande lijst. Weghalen kan wel gewoon met `whit
 | AppleSkin | 2.5.2+mc1.20.1 | `appleskin-fabric-mc1.20.1-2.5.2.jar` |  |
 | Architectury | 9.2.14 | `architectury-9.2.14-fabric.jar` |  |
 | Armor Statues | 8.0.6 | `ArmorStatues-v8.0.6-1.20.1-Fabric.jar` |  |
+| Async Locator | 1.3.0 | `async-locator-fabric-1.20-1.3.0.jar` |  |
 | Athena | 3.1.2 | `athena-fabric-1.20.1-3.1.2.jar` |  |
 | AzureLib | 3.0.27 | `azurelib-fabric-1.20.1-3.0.27.jar` |  |
 | Balm | 7.3.44 | `balm-fabric-1.20.1-7.3.44.jar` |  |
