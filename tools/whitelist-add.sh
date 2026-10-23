@@ -7,7 +7,7 @@
 # Zonder namen: controleert en herstelt alleen de bestaande lijst.
 # Typ daarna in de AMP-console:        whitelist reload
 set -euo pipefail
-WL="${WHITELIST:-$HOME/.ampdata/instances/HomesteadSchool01/Minecraft/whitelist.json}"
+WL="${WHITELIST:-$HOME/.ampdata/instances/Homestead201/Minecraft/whitelist.json}"
 cp "$WL" "$WL.bak-$(date +%Y%m%d-%H%M%S)"
 python3 -I - "$WL" "$@" <<'EOF'
 import hashlib, json, sys, uuid
