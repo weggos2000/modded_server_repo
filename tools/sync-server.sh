@@ -2,21 +2,28 @@
 # Zet de mods van de AMP-server gelijk aan deze repo (zonder de client-only mods).
 # Draai op de AMP-server als gebruiker "amp", met de Minecraft-server GESTOPT:
 #   curl -fsSL https://raw.githubusercontent.com/weggos2000/modded_server_repo/main/tools/sync-server.sh | bash
+# Andere instance: geef de Minecraft-map als argument. Een lokale kopie van de repo gebruiken
+# (bv. om een branch te testen voor hij gepusht is): REPO_DIR=~/pad/naar/repo bash sync-server.sh
 # Weggehaalde/oude jars gaan naar mods-backup/<datum>/ in de instance.
 set -euo pipefail
 
 REPO="weggos2000/modded_server_repo"
 BRANCH="main"
-INSTANCE="${1:-$HOME/.ampdata/instances/HomesteadSchool01/Minecraft}"
+INSTANCE="${1:-$HOME/.ampdata/instances/Homestead201/Minecraft}"
 MODS="$INSTANCE/mods"
 chmod u+w "$MODS"   # de server pack levert een read-only mods-map
 
 WORK="$(mktemp -d)"
 trap 'rm -rf "$WORK"' EXIT
-echo "==> Repo downloaden..."
-curl -fsSL -o "$WORK/repo.zip" "https://codeload.github.com/$REPO/zip/refs/heads/$BRANCH"
-unzip -q "$WORK/repo.zip" -d "$WORK/x"
-ROOT="$(find "$WORK/x" -mindepth 1 -maxdepth 1 -type d | head -1)"
+if [ -n "${REPO_DIR:-}" ]; then
+  ROOT="$REPO_DIR"
+  echo "==> Lokale repo gebruiken: $ROOT"
+else
+  echo "==> Repo downloaden..."
+  curl -fsSL -o "$WORK/repo.zip" "https://codeload.github.com/$REPO/zip/refs/heads/$BRANCH"
+  unzip -q "$WORK/repo.zip" -d "$WORK/x"
+  ROOT="$(find "$WORK/x" -mindepth 1 -maxdepth 1 -type d | head -1)"
+fi
 SRC="$ROOT/mods"
 tr -d '\r' < "$ROOT/client-only.txt" | grep -v '^\s*$' > "$WORK/client-only"
 

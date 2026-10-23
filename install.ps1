@@ -4,7 +4,7 @@
   Installeert of updatet in een keer:
     - Fabric voor Minecraft 1.20.1
     - een profiel/instance "Homestead School" (gewone Minecraft Launcher of Prism Launcher)
-    - de Homestead 1.3.7-pack (configs, quests, resourcepacks, shaders), rechtstreeks van CurseForge
+    - de Homestead 2.0-pack (configs, quests, resourcepacks, shaders), rechtstreeks van CurseForge
     - de mods + KubeJS-bestanden uit deze repo (exact gelijk aan de server)
     - de server in je serverlijst
 
@@ -41,7 +41,7 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
 
 $Repo   = 'weggos2000/modded_server_repo'
 $Branch = 'main'
-$InstallerVersion = 3   # verhogen bij elke wijziging aan dit script (ook in pack.json zetten)
+$InstallerVersion = 4   # verhogen bij elke wijziging aan dit script (ook in pack.json zetten)
 
 function Write-Step($msg) { Write-Host "==> $msg" -ForegroundColor Cyan }
 function Write-Warn($msg) { Write-Host "    $msg" -ForegroundColor Yellow }
@@ -226,7 +226,7 @@ try {
     if ($SourceDir) {
         $RepoRoot = $SourceDir
     } else {
-        Write-Step "Bestanden downloaden van github.com/$Repo (ca. 570 MB, even geduld)..."
+        Write-Step "Bestanden downloaden van github.com/$Repo (ca. 700 MB, even geduld)..."
         $zip = Join-Path $work 'repo.zip'
         Save-Url "https://codeload.github.com/$Repo/zip/refs/heads/$Branch" $zip
         $extract = Join-Path $work 'repo'
@@ -391,8 +391,18 @@ try {
         Write-Step "Homestead $($Pack.packVersion) ophalen van CurseForge (ca. 110 MB)..."
         $pz = $PackZip
         if (-not $pz) { $pz = Join-Path $work 'homestead.zip'; Save-Url $Pack.packUrl $pz }
+        if ($installed) {
+            # Andere pack-versie: scripts en datapacks van de oude versie weghalen, anders blijven
+            # er recepten/items hangen die de server niet meer heeft. Onze eigen KubeJS-bestanden komen in stap 6 terug.
+            Write-Step "Scripts van Homestead $installed opruimen..."
+            foreach ($d in 'kubejs\startup_scripts', 'kubejs\server_scripts', 'kubejs\client_scripts', 'scripts', 'config\openloader') {
+                $p = Join-Path $GameDir $d
+                if (Test-Path -LiteralPath $p) { Remove-Item -LiteralPath $p -Recurse -Force }
+            }
+        }
         Write-Step "Configs, quests, resourcepacks en shaders uitpakken..."
         $z = [System.IO.Compression.ZipFile]::OpenRead($pz)
+        $skipped = @()
         try {
             foreach ($e in $z.Entries) {
                 if (-not $e.Name) { continue }                            # mappen
@@ -400,10 +410,17 @@ try {
                 $rel = $e.FullName.Substring('overrides/'.Length)
                 if ($rel -like 'mods/*') { continue }                     # mods komen uit de repo
                 $dst = Join-Path $GameDir ($rel -replace '/', '\')
-                New-Item -ItemType Directory -Force -Path (Split-Path $dst -Parent) | Out-Null
-                [System.IO.Compression.ZipFileExtensions]::ExtractToFile($e, $dst, $true)
+                # Een shader in 2.0 heeft heel diepe mappen: bij een te lang pad dat ene bestand overslaan i.p.v. stoppen
+                try {
+                    New-Item -ItemType Directory -Force -Path (Split-Path $dst -Parent) | Out-Null
+                    [System.IO.Compression.ZipFileExtensions]::ExtractToFile($e, $dst, $true)
+                } catch { $skipped += $rel }
             }
         } finally { $z.Dispose() }
+        if ($skipped) {
+            Write-Warn "$($skipped.Count) bestand(en) overgeslagen (pad te lang), bv. $($skipped[0])"
+            Write-Warn "Niet erg als het om een shader gaat; anders: stuur een screenshot naar de beheerder."
+        }
         Write-Utf8 $marker $Pack.packVersion
     } else {
         Write-Step "Homestead $($Pack.packVersion) staat er al (configs blijven zoals ze zijn)."

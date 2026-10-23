@@ -5,7 +5,7 @@ Homestead School - alles-in-een installer / updater (Linux en macOS)
 Doet hetzelfde als install.ps1 op Windows:
   - Fabric voor Minecraft 1.20.1
   - een profiel/instance "Homestead School" (gewone Minecraft Launcher of Prism Launcher)
-  - de Homestead 1.3.7-pack (configs, quests, resourcepacks, shaders), rechtstreeks van CurseForge
+  - de Homestead 2.0-pack (configs, quests, resourcepacks, shaders), rechtstreeks van CurseForge
   - de mods + KubeJS-bestanden uit deze repo (exact gelijk aan de server)
   - de server in je serverlijst
   - normale of performance-modus (zelfde .homestead-map als op Windows)
@@ -35,7 +35,7 @@ import zlib
 
 REPO = 'weggos2000/modded_server_repo'
 BRANCH = 'main'
-INSTALLER_VERSION = 3   # verhogen bij elke wijziging aan de installers (ook in pack.json zetten)
+INSTALLER_VERSION = 4   # verhogen bij elke wijziging aan de installers (ook in pack.json zetten)
 UA = 'homestead-school-installer'
 
 IS_MAC = platform.system() == 'Darwin'
@@ -168,7 +168,7 @@ def crc32_file(path):
 
 # --- bron: de repo (als zip van GitHub, of een lokale map) ---------------------
 class Source:
-    """Leest bestanden uit de repo-zip zonder alles uit te pakken (scheelt 570 MB schrijven)."""
+    """Leest bestanden uit de repo-zip zonder alles uit te pakken (scheelt 700 MB schrijven)."""
 
     def __init__(self, zip_path=None, folder=None):
         self.folder = folder
@@ -400,7 +400,7 @@ def install(args, work):
     elif args.repo_zip:
         src = Source(zip_path=args.repo_zip)
     else:
-        step(f'Bestanden downloaden van github.com/{REPO} (ca. 570 MB, even geduld)...')
+        step(f'Bestanden downloaden van github.com/{REPO} (ca. 700 MB, even geduld)...')
         zp = os.path.join(work, 'repo.zip')
         download(f'https://codeload.github.com/{REPO}/zip/refs/heads/{BRANCH}', zp, progress=True)
         src = Source(zip_path=zp)
@@ -539,6 +539,14 @@ def install(args, work):
         if not pz:
             pz = os.path.join(work, 'homestead.zip')
             download(pack['packUrl'], pz, progress=True)
+        if installed:
+            # Andere pack-versie: scripts en datapacks van de oude versie weghalen, anders blijven
+            # er recepten/items hangen die de server niet meer heeft. Onze eigen KubeJS-bestanden komen in stap 6 terug.
+            step(f"Scripts van Homestead {installed} opruimen...")
+            for d in ('kubejs/startup_scripts', 'kubejs/server_scripts', 'kubejs/client_scripts', 'scripts', 'config/openloader'):
+                p = os.path.join(game, *d.split('/'))
+                if os.path.isdir(p):
+                    shutil.rmtree(p)
         step('Configs, quests, resourcepacks en shaders uitpakken...')
         with zipfile.ZipFile(pz) as z:
             for e in z.infolist():
