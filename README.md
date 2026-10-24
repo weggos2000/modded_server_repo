@@ -133,7 +133,7 @@ herstelt het script alleen de bestaande lijst. Weghalen kan wel gewoon met `whit
 ## Modlijst
 
 <!-- MODLIST:START -->
-**387 mods** (67 daarvan alleen voor de client).
+**388 mods** (67 daarvan alleen voor de client).
 
 | Mod | Versie | Bestand | Alleen client |
 |---|---|---|---|
@@ -259,6 +259,7 @@ herstelt het script alleen de bestaande lijst. Weghalen kan wel gewoon met `whit
 | Euphoria Patcher | 1.10.5-r5.9.3-fabric | `EuphoriaPatcher-1.10.5-r5.9.3-fabric.jar` | ja |
 | Expanded Delight | 0.3.2 | `expandeddelight-0.3.2.jar` |  |
 | Explorer's Compass | 1.20.1-2.6.0-fabric | `ExplorersCompass-1.20.1-2.6.0-fabric.jar` |  |
+| Extra Thicc Packets | 1.0 | `extra_thicc_packets-1.0.jar` |  |
 | Extreme sound muffler | 3.51 | `ExtremeSoundMuffler-3.51-fabric-1.20.1.jar` |  |
 | Fabric API | 0.92.12+1.20.1 | `fabric-api-0.92.12+1.20.1.jar` |  |
 | Fabric Language Kotlin | 1.14.1+kotlin.2.4.20 | `fabric-language-kotlin-1.14.1+kotlin.2.4.20.jar` |  |
