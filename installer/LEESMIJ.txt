@@ -10,6 +10,7 @@ Homestead School installer
 5. Start "Homestead School" in je launcher. De server staat al in je Multiplayer-lijst.
 
 Updaten: gewoon opnieuw dubbelklikken op "Installeren.cmd".
+De installer werkt zichzelf ook automatisch bij als er een nieuwe versie is.
 
 Laptop of trage pc? Kies bij het installeren "Performance", of dubbelklik later op
 "Performance aan.cmd" (meer FPS, minder effecten). "Performance uit.cmd" zet alles terug.

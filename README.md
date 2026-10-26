@@ -32,7 +32,7 @@ Je hebt Minecraft Java 1.20.1 nodig. Verder niets.
 5. Start het profiel/de instance **Homestead School**. De eerste keer opstarten duurt een paar minuten.
    De server staat al in je **Multiplayer**-lijst.
 
-**Updaten:** dubbelklik gewoon opnieuw op **Installeren.cmd**. Alleen wat veranderd is, wordt opnieuw gezet.
+**Updaten:** dubbelklik gewoon opnieuw op **Installeren.cmd**. Alleen wat veranderd is, wordt opnieuw gezet. Is er een nieuwere installer, dan werkt die zichzelf eerst bij (sinds installer-versie 6); je hoeft de zip niet opnieuw te downloaden.
 
 ### Performance-modus (laptops)
 

@@ -21,6 +21,7 @@ Of met deze map:
 Nodig: Python 3 (staat op bijna elke Linux; op macOS vraagt het systeem zelf om het te installeren).
 
 Updaten: gewoon de installer opnieuw starten.
+De installer werkt zichzelf ook automatisch bij als er een nieuwe versie is.
 
 Laptop of trage computer? Kies bij het installeren "Performance", of start later
 "Performance aan" (meer FPS, minder effecten). "Performance uit" zet alles terug.

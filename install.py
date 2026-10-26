@@ -35,7 +35,7 @@ import zlib
 
 REPO = 'weggos2000/modded_server_repo'
 BRANCH = 'main'
-INSTALLER_VERSION = 5   # verhogen bij elke wijziging aan de installers (ook in pack.json zetten)
+INSTALLER_VERSION = 6   # verhogen bij elke wijziging aan de installers (ook in pack.json zetten)
 UA = 'homestead-school-installer'
 
 IS_MAC = platform.system() == 'Darwin'
@@ -423,6 +423,27 @@ def find_prism(args):
     return next((p for p in DEF_PRISM if os.path.isdir(p)), None)
 
 
+def update_installer(src):
+    """install.py en de extra Performance-/LEESMIJ-bestanden naast ons vervangen door die uit de repo.
+    install.sh en Installeren.* niet: bash leest een lopend script stukje per stukje."""
+    here = os.path.dirname(os.path.abspath(__file__))
+    write_bytes(os.path.abspath(__file__), src.read('install.py'))
+    for name in os.listdir(os.path.join(here)):
+        if name.startswith('Performance ') or name == 'LEESMIJ.txt':
+            try:
+                write_bytes(os.path.join(here, name), src.read('installer/unix/' + name))
+            except (KeyError, OSError):
+                pass
+
+
+def write_bytes(path, data):
+    mode = os.stat(path).st_mode if os.path.exists(path) else None
+    with open(path, 'wb') as f:
+        f.write(data)
+    if mode is not None:
+        os.chmod(path, mode)
+
+
 # --- de echte installatie ------------------------------------------------------
 def install(args, work):
     # 1. Repo ophalen (mods, KubeJS-bestanden, pack.json)
@@ -438,8 +459,20 @@ def install(args, work):
     pack = json.loads(src.read('pack.json').decode('utf-8-sig'))
     fabric_id = f"fabric-loader-{pack['fabricLoader']}-{pack['minecraft']}"
     if int(pack.get('installerVersion', 0)) > INSTALLER_VERSION:
-        warn('Er is een nieuwere installer. Haal hem opnieuw op via https://github.com/' + REPO)
-        warn('(Deze versie gaat nu gewoon verder.)')
+        if args.updated:
+            warn('Er is een nieuwere installer. Haal hem opnieuw op via https://github.com/' + REPO)
+            warn('(Deze versie gaat nu gewoon verder.)')
+        else:
+            step(f"Nieuwere installer gevonden (versie {pack['installerVersion']}), die zet ik nu in de plaats...")
+            update_installer(src)
+            # opnieuw starten met dezelfde opties; de repo hebben we al, dus niet opnieuw downloaden
+            again = [a for a in sys.argv[1:] if a != '--pause']   # wij pauzeren zelf op het einde
+            if src.zip:
+                again += ['--repo-zip', src.zip.filename]
+            else:
+                again += ['--source-dir', src.folder]
+            again.append('--updated')
+            raise Quit(subprocess.call([sys.executable, os.path.abspath(__file__)] + again))
 
     # 2. Launcher kiezen
     launcher = args.launcher
@@ -707,6 +740,7 @@ def main():
     p.add_argument('--pack-zip', help='lokale Homestead-zip i.p.v. downloaden')
     p.add_argument('--work-dir', default=DEF_WORK)
     p.add_argument('--pause', action='store_true', help='op Enter wachten op het einde (dubbelklik-bestanden)')
+    p.add_argument('--updated', action='store_true', help=argparse.SUPPRESS)   # intern: net door de auto-update opnieuw gestart
     args = p.parse_args()
     if args.legacy_path and not args.instance_path:
         args.instance_path = args.legacy_path

@@ -31,7 +31,8 @@ param(
     [string]$OfficialGameDir = "$env:APPDATA\.homestead-school",
     [string]$SourceDir,      # lokale repo-map i.p.v. downloaden
     [string]$PackZip,        # lokale Homestead-zip i.p.v. downloaden
-    [switch]$NoPause
+    [switch]$NoPause,
+    [switch]$SelfUpdated     # intern: deze run is net door de auto-update opnieuw gestart
 )
 
 $ErrorActionPreference = 'Stop'
@@ -41,12 +42,25 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
 
 $Repo   = 'weggos2000/modded_server_repo'
 $Branch = 'main'
-$InstallerVersion = 5   # verhogen bij elke wijziging aan dit script (ook in pack.json zetten)
+$InstallerVersion = 6   # verhogen bij elke wijziging aan dit script (ook in pack.json zetten)
 
 function Write-Step($msg) { Write-Host "==> $msg" -ForegroundColor Cyan }
 function Write-Warn($msg) { Write-Host "    $msg" -ForegroundColor Yellow }
 function Save-Url($url, $dest) { Invoke-WebRequest -Uri $url -OutFile $dest -UseBasicParsing -UserAgent 'homestead-school-installer' }
 function Write-Utf8($path, $text) { [IO.File]::WriteAllText($path, $text, (New-Object System.Text.UTF8Encoding($false))) }
+
+function Update-Installer($repoRoot) {
+    # install.ps1 en de extra .cmd-bestanden naast ons vervangen door die uit de repo.
+    # Installeren.cmd niet: cmd leest een lopend batchbestand regel per regel en zou anders struikelen.
+    $here = Split-Path -Parent $PSCommandPath
+    Copy-Item -LiteralPath (Join-Path $repoRoot 'install.ps1') -Destination $PSCommandPath -Force
+    foreach ($n in 'Performance aan.cmd', 'Performance uit.cmd', 'LEESMIJ.txt') {
+        $s = Join-Path $repoRoot "installer\$n"
+        if ((Test-Path -LiteralPath $s) -and (Test-Path -LiteralPath (Join-Path $here $n))) {
+            Copy-Item -LiteralPath $s -Destination (Join-Path $here $n) -Force
+        }
+    }
+}
 
 function Stop-WithPause($code) {
     if (-not $NoPause) { Write-Host ""; Read-Host "Druk op Enter om af te sluiten" | Out-Null }
@@ -269,9 +283,24 @@ try {
     $Pack = Get-Content -LiteralPath (Join-Path $RepoRoot 'pack.json') -Raw | ConvertFrom-Json
     $FabricId = "fabric-loader-$($Pack.fabricLoader)-$($Pack.minecraft)"
     if ([int]$Pack.installerVersion -gt $InstallerVersion) {
-        Write-Warn "Er is een nieuwere installer. Download HomesteadSchool-Installer.zip opnieuw van:"
-        Write-Warn "https://github.com/$Repo"
-        Write-Warn "(Deze versie gaat nu gewoon verder.)"
+        if ($SelfUpdated -or -not $PSCommandPath) {
+            Write-Warn "Er is een nieuwere installer. Download HomesteadSchool-Installer.zip opnieuw van:"
+            Write-Warn "https://github.com/$Repo"
+            Write-Warn "(Deze versie gaat nu gewoon verder.)"
+        } else {
+            Write-Step "Nieuwere installer gevonden (versie $($Pack.installerVersion)), die zet ik nu in de plaats..."
+            Update-Installer $RepoRoot
+            # opnieuw starten met dezelfde opties; de repo hebben we al, dus niet opnieuw downloaden
+            $relaunch = @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', $PSCommandPath)
+            foreach ($k in $PSBoundParameters.Keys) {
+                if ($k -in 'SourceDir', 'NoPause', 'SelfUpdated') { continue }
+                $relaunch += "-$k"; $relaunch += [string]$PSBoundParameters[$k]
+            }
+            $relaunch += @('-SourceDir', $RepoRoot, '-SelfUpdated')
+            if ($NoPause) { $relaunch += '-NoPause' }
+            & powershell.exe @relaunch
+            exit $LASTEXITCODE
+        }
     }
 
     # --- 2. Launcher kiezen ---------------------------------------------------
