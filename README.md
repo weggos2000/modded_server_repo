@@ -133,7 +133,7 @@ herstelt het script alleen de bestaande lijst. Weghalen kan wel gewoon met `whit
 ## Modlijst
 
 <!-- MODLIST:START -->
-**388 mods** (67 daarvan alleen voor de client).
+**389 mods** (67 daarvan alleen voor de client).
 
 | Mod | Versie | Bestand | Alleen client |
 |---|---|---|---|
@@ -259,7 +259,7 @@ herstelt het script alleen de bestaande lijst. Weghalen kan wel gewoon met `whit
 | Euphoria Patcher | 1.10.5-r5.9.3-fabric | `EuphoriaPatcher-1.10.5-r5.9.3-fabric.jar` | ja |
 | Expanded Delight | 0.3.2 | `expandeddelight-0.3.2.jar` |  |
 | Explorer's Compass | 1.20.1-2.6.0-fabric | `ExplorersCompass-1.20.1-2.6.0-fabric.jar` |  |
-| Extra Thicc Packets | 1.0 | `extra_thicc_packets-1.0.jar` |  |
+| Extra Thicc Packets | 1.17-1.19+ | `extra_thicc_packets-1.0.jar` |  |
 | Extreme sound muffler | 3.51 | `ExtremeSoundMuffler-3.51-fabric-1.20.1.jar` |  |
 | Fabric API | 0.92.12+1.20.1 | `fabric-api-0.92.12+1.20.1.jar` |  |
 | Fabric Language Kotlin | 1.14.1+kotlin.2.4.20 | `fabric-language-kotlin-1.14.1+kotlin.2.4.20.jar` |  |
@@ -268,8 +268,8 @@ herstelt het script alleen de bestaande lijst. Weghalen kan wel gewoon met `whit
 | Fadeless | 1.0.1 | `fadeless-1.0.1.jar` | ja |
 | Fairy Lights | 1.1.5_fabric | `fairylights-1.1.5_fabric.jar` |  |
 | FancyMenu | 3.9.14 | `fancymenu_fabric_3.9.14_MC_1.20.1.jar` | ja |
-| Farmer's Delight | 1.20.1-1.4.3 | `farmers-delight-fabric-1.4.3.jar` |  |
 | Farmer's Delight | 1.20.1-2.4.1+refabricated | `FarmersDelight-1.20.1-2.4.1+refabricated.jar` |  |
+| Farmer's Delight | 1.20.1-1.4.3 | `farmers-delight-fabric-1.4.3.jar` |  |
 | Farmer's Knives | 3.2 | `farmersknives-3.2.jar` |  |
 | Fast Noise | 1.0.13+1.20 | `zfastnoise-1.0.13+1.20.jar` |  |
 | FastBoot | 1.2-fabric | `fastboot-1.20.x-1.2fabric.jar` |  |
@@ -368,6 +368,7 @@ herstelt het script alleen de bestaande lijst. Weghalen kan wel gewoon met `whit
 | More Enchantment Info | 0.2.0 | `more-enchantment-info-0.2.0.jar` |  |
 | Mouse Tweaks | 2.26 | `MouseTweaks-fabric-mc1.20-2.26.jar` | ja |
 | Mouse Wheelie | 1.16.3+mc1.20.1 | `mouse-wheelie-1.16.3+mc1.20.1.jar` |  |
+| Music Disc Maker | 3.1.2 | `music_disc_maker-3.1.2+fabric-1.20.1.jar` |  |
 | Mythic Upgrades | 5.1.1 | `mythicupgrades-fabric-1.20.1-5.1.1.jar` |  |
 | Nature's Compass | 1.20.1-2.6.0-fabric | `NaturesCompass-1.20.1-2.6.0-fabric.jar` |  |
 | Nature's Delight | 1.12-1.20.1 | `naturesdelight-1.12-1.20.1.jar` |  |
